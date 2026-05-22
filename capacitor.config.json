@@ -5,13 +5,7 @@
   "server": { "androidScheme": "https" },
   "android": {
     "backgroundColor": "#14110D",
-    "allowMixedContent": false,
-    "includePlugins": [
-      "@capacitor/splash-screen",
-      "@capacitor/status-bar",
-      "@capacitor/keep-awake",
-      "@capacitor-community/text-to-speech"
-    ]
+    "allowMixedContent": false
   },
   "plugins": {
     "SplashScreen": {
