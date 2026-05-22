@@ -1,0 +1,67 @@
+---
+format_version: '13'
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: other
+trigger_map:
+  - push_branch: main
+    workflow: build-apk
+  - push_branch: master
+    workflow: build-apk
+
+workflows:
+  build-apk:
+    description: |
+      Build HPM 听书 Android Debug APK from web sources via Capacitor.
+    steps:
+      - activate-ssh-key@4: {}
+      - git-clone@8: {}
+      - script@1:
+          title: Install Node 20
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                set -ex
+                # Bitrise stack already has node, but pin to 20 if not
+                if ! command -v node &> /dev/null || [[ $(node -v) != v20* ]]; then
+                  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+                  sudo apt-get install -y nodejs
+                fi
+                node -v
+                npm -v
+      - script@1:
+          title: Install npm dependencies
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                set -ex
+                npm install
+      - script@1:
+          title: Add Android platform and copy brand icons
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                set -ex
+                npx cap add android
+                for d in mipmap-mdpi mipmap-hdpi mipmap-xhdpi mipmap-xxhdpi mipmap-xxxhdpi mipmap-anydpi-v26; do
+                  cp -R icons/$d android/app/src/main/res/ 2>/dev/null || true
+                done
+                mkdir -p android/app/src/main/res/values
+                cp icons/values/colors.xml android/app/src/main/res/values/colors.xml 2>/dev/null || true
+                npx cap sync android
+      - install-missing-android-tools@3:
+          inputs:
+            - gradlew_path: android/gradlew
+      - android-build@1:
+          inputs:
+            - project_location: android
+            - module: app
+            - variant: debug
+      - deploy-to-bitrise-io@2:
+          inputs:
+            - deploy_path: android/app/build/outputs/apk/debug/app-debug.apk
+            - notify_user_groups: none
+
+meta:
+  bitrise.io:
+    stack: linux-docker-android-22.04
+    machine_type_id: elite

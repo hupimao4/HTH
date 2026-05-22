@@ -1,0 +1,26 @@
+{
+  "appId": "com.hpm.tingshu",
+  "appName": "HPM 听书",
+  "webDir": "www",
+  "server": { "androidScheme": "https" },
+  "android": {
+    "backgroundColor": "#14110D",
+    "allowMixedContent": false,
+    "includePlugins": [
+      "@capacitor/splash-screen",
+      "@capacitor/status-bar",
+      "@capacitor/keep-awake",
+      "@capacitor-community/text-to-speech"
+    ]
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 800,
+      "backgroundColor": "#14110D",
+      "splashFullScreen": true,
+      "splashImmersive": true,
+      "showSpinner": false
+    },
+    "StatusBar": { "style": "DARK", "backgroundColor": "#14110D" }
+  }
+}

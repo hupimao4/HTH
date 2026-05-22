@@ -1,0 +1,3249 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>HPM 听书</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#14110D">
+<meta name="application-name" content="HPM 听书">
+<meta name="description" content="本地 TXT 转有声书 · 系统 TTS · 5 种少女音 · 支持网址加载">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="HPM 听书">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+<link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
+<style>
+/* ============================================================
+   HPM Design System · colors_and_type.css
+   Tokens for color, type, spacing, radius, shadow, motion.
+   Light + dark are both first-class.
+   ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  /* ---------- Color · light (paper) ---------- */
+  --bg:          #F6F1E7;
+  --bg-elev:     #FBF7EE;
+  --bg-sunken:   #EFE8D8;
+  --fg:          #1C1812;
+  --fg-muted:    #6B6258;
+  --fg-faint:    #9A9080;
+  --accent:        #C8761E;  /* amber · playing / primary */
+  --accent-strong: #A85F12;
+  --accent-soft:   #F4E2C4;
+  --secondary:        #3C7A82;  /* teal · network / links */
+  --secondary-soft:   #DCEAEC;
+  --danger:        #B23A3A;
+  --danger-soft:   #F2D6D6;
+  --rule:          #E5DCC8;
+  --rule-strong:   #D4C7A8;
+  --scrim:         rgba(28, 24, 18, 0.40);
+
+  /* ---------- Type · families ---------- */
+  --font-serif: "Source Serif 4", "Noto Serif SC", Georgia, "Songti SC", "Source Han Serif SC", serif;
+  --font-sans:  "Inter", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", sans-serif;
+  --font-mono:  "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* ---------- Type · scale (size / line-height) ---------- */
+  --t-display-size: 48px;   --t-display-lh: 56px;
+  --t-h1-size:      32px;   --t-h1-lh:      40px;
+  --t-h2-size:      24px;   --t-h2-lh:      32px;
+  --t-h3-size:      20px;   --t-h3-lh:      28px;
+  --t-body-l-size:  18px;   --t-body-l-lh:  30px;
+  --t-body-size:    16px;   --t-body-lh:    26px;
+  --t-ui-size:      15px;   --t-ui-lh:      22px;
+  --t-ui-sm-size:   13px;   --t-ui-sm-lh:   18px;
+  --t-mono-size:    13px;   --t-mono-lh:    18px;
+
+  /* ---------- Weights ---------- */
+  --w-regular: 400;
+  --w-medium:  500;
+  --w-semi:    600;
+  --w-bold:    700;
+
+  /* ---------- Spacing · 8pt grid ---------- */
+  --s-0:  0;
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  24px;
+  --s-6:  32px;
+  --s-7:  48px;
+  --s-8:  64px;
+  --s-9:  96px;
+  --s-10: 128px;
+
+  /* ---------- Radius ---------- */
+  --r-sm:   10px;
+  --r-md:   18px;
+  --r-lg:   28px;
+  --r-pill: 999px;
+
+  /* ---------- Shadow / elevation ---------- */
+  --shadow-1: 0 1px 2px rgba(28, 24, 18, 0.04), 0 2px 8px rgba(28, 24, 18, 0.06);
+  --shadow-2: 0 4px 16px rgba(28, 24, 18, 0.10), 0 12px 32px rgba(28, 24, 18, 0.12);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+  /* ---------- Motion ---------- */
+  --d-fast: 120ms;
+  --d-base: 220ms;
+  --d-slow: 360ms;
+  --ease:   cubic-bezier(0.22, 0.61, 0.36, 1);    /* out */
+  --ease-in: cubic-bezier(0.32, 0, 0.67, 0);      /* in (leaving) */
+
+  /* ---------- Touch targets ---------- */
+  --touch-min: 44px;
+}
+
+/* ============================================================
+   Dark mode (ink)
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:          #14110D;
+    --bg-elev:     #1C1812;
+    --bg-sunken:   #0E0C09;
+    --fg:          #F6F1E7;
+    --fg-muted:    #9A9080;
+    --fg-faint:    #6B6258;
+    --accent:        #E8923A;
+    --accent-strong: #F4A85A;
+    --accent-soft:   #3A2A14;
+    --secondary:        #67B0B8;
+    --secondary-soft:   #1E3438;
+    --danger:        #E26B6B;
+    --danger-soft:   #3A1F1F;
+    --rule:          #2A241C;
+    --rule-strong:   #3D362B;
+    --scrim:         rgba(0, 0, 0, 0.60);
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.30), 0 2px 8px rgba(0, 0, 0, 0.35);
+    --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.40), 0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+}
+
+[data-theme="dark"] {
+  --bg:          #14110D;
+  --bg-elev:     #1C1812;
+  --bg-sunken:   #0E0C09;
+  --fg:          #F6F1E7;
+  --fg-muted:    #9A9080;
+  --fg-faint:    #6B6258;
+  --accent:        #E8923A;
+  --accent-strong: #F4A85A;
+  --accent-soft:   #3A2A14;
+  --secondary:        #67B0B8;
+  --secondary-soft:   #1E3438;
+  --rule:          #2A241C;
+  --rule-strong:   #3D362B;
+  --scrim:         rgba(0, 0, 0, 0.60);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.30), 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.40), 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="light"] {
+  --bg:          #F6F1E7;
+  --bg-elev:     #FBF7EE;
+  --bg-sunken:   #EFE8D8;
+  --fg:          #1C1812;
+  --fg-muted:    #6B6258;
+  --fg-faint:    #9A9080;
+  --accent:        #C8761E;
+  --accent-strong: #A85F12;
+  --accent-soft:   #F4E2C4;
+  --secondary:        #3C7A82;
+  --secondary-soft:   #DCEAEC;
+  --rule:          #E5DCC8;
+  --rule-strong:   #D4C7A8;
+  --scrim:         rgba(28, 24, 18, 0.40);
+  --shadow-1: 0 1px 2px rgba(28, 24, 18, 0.04), 0 2px 8px rgba(28, 24, 18, 0.06);
+  --shadow-2: 0 4px 16px rgba(28, 24, 18, 0.10), 0 12px 32px rgba(28, 24, 18, 0.12);
+}
+
+/* ============================================================
+   Semantic element styles
+   ============================================================ */
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--t-body-size);
+  line-height: var(--t-body-lh);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, .t-h1 {
+  font-family: var(--font-serif);
+  font-size: var(--t-h1-size);
+  line-height: var(--t-h1-lh);
+  font-weight: var(--w-semi);
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-wrap: balance;
+}
+h2, .t-h2 {
+  font-family: var(--font-serif);
+  font-size: var(--t-h2-size);
+  line-height: var(--t-h2-lh);
+  font-weight: var(--w-semi);
+  letter-spacing: -0.005em;
+  margin: 0;
+  text-wrap: balance;
+}
+h3, .t-h3 {
+  font-family: var(--font-sans);
+  font-size: var(--t-h3-size);
+  line-height: var(--t-h3-lh);
+  font-weight: var(--w-semi);
+  margin: 0;
+}
+.t-display {
+  font-family: var(--font-serif);
+  font-size: var(--t-display-size);
+  line-height: var(--t-display-lh);
+  font-weight: var(--w-semi);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.t-body-l {
+  font-family: var(--font-serif);
+  font-size: var(--t-body-l-size);
+  line-height: var(--t-body-l-lh);
+}
+.t-body {
+  font-family: var(--font-serif);
+  font-size: var(--t-body-size);
+  line-height: var(--t-body-lh);
+}
+.t-ui {
+  font-family: var(--font-sans);
+  font-size: var(--t-ui-size);
+  line-height: var(--t-ui-lh);
+}
+.t-ui-sm {
+  font-family: var(--font-sans);
+  font-size: var(--t-ui-sm-size);
+  line-height: var(--t-ui-sm-lh);
+  color: var(--fg-muted);
+}
+.t-mono {
+  font-family: var(--font-mono);
+  font-size: var(--t-mono-size);
+  line-height: var(--t-mono-lh);
+  color: var(--fg-muted);
+}
+
+a {
+  color: var(--secondary);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in oklab, var(--secondary) 30%, transparent);
+  transition: border-color var(--d-fast) var(--ease);
+}
+a:hover { border-bottom-color: var(--secondary); }
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: var(--s-5) 0;
+}
+
+::selection { background: var(--accent-soft); color: var(--fg); }
+
+/* ============================================================
+   Component primitives
+   ============================================================ */
+
+/* Button */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  height: 44px;
+  padding: 0 var(--s-5);
+  border-radius: var(--r-sm);
+  border: 1px solid transparent;
+  background: var(--bg-elev);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--t-ui-size);
+  font-weight: var(--w-medium);
+  cursor: pointer;
+  transition: transform var(--d-fast) var(--ease),
+              background var(--d-fast) var(--ease),
+              border-color var(--d-fast) var(--ease);
+}
+.btn:active { transform: scale(0.97); }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.btn--primary {
+  background: var(--accent);
+  color: #FFF;
+}
+.btn--primary:hover { background: var(--accent-strong); }
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--rule);
+}
+.btn--ghost:hover { background: var(--bg-elev); border-color: var(--rule-strong); }
+
+.btn--icon {
+  width: 44px;
+  padding: 0;
+  border-radius: var(--r-pill);
+}
+
+/* Card */
+.card {
+  background: var(--bg-elev);
+  border-radius: var(--r-md);
+  padding: var(--s-5);
+  box-shadow: var(--shadow-1);
+}
+@media (prefers-color-scheme: dark) {
+  .card { box-shadow: none; border: 1px solid var(--rule); }
+}
+
+/* Chip */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  height: 28px;
+  padding: 0 var(--s-3);
+  border-radius: var(--r-pill);
+  background: var(--bg-sunken);
+  color: var(--fg-muted);
+  font-family: var(--font-sans);
+  font-size: var(--t-ui-sm-size);
+  font-weight: var(--w-medium);
+}
+.chip--active { background: var(--accent-soft); color: var(--accent-strong); }
+
+/* ============================================================
+   Gold tokens (luxe accent for headings, brand highlights, FAB)
+   ============================================================ */
+:root {
+  --gold:        #C9A24E;
+  --gold-strong: #9D7A2A;
+  --gold-soft:   #F0E1B8;
+  --gold-grad:   linear-gradient(135deg, #E5C572 0%, #C9A24E 50%, #9D7A2A 100%);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --gold:        #E5C572;
+    --gold-strong: #C9A24E;
+    --gold-soft:   #3A2F18;
+  }
+}
+[data-theme="dark"] {
+  --gold:        #E5C572;
+  --gold-strong: #C9A24E;
+  --gold-soft:   #3A2F18;
+}
+
+.gold-text {
+  background: var(--gold-grad);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.gold-bold {
+  font-family: var(--font-serif);
+  font-weight: 800;
+  letter-spacing: .04em;
+  background: var(--gold-grad);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+
+html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; overscroll-behavior: none; }
+#app { position: fixed; inset: 0; display: flex; flex-direction: column; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); box-sizing: border-box; }
+#app > div { flex: 1; position: relative; overflow: hidden; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script>/* HpmReadTextFile · multi-encoding TXT reader for browsers.
+ *
+ * Works in every modern browser (Chrome, Firefox, Safari desktop + mobile,
+ * Edge) using the built-in TextDecoder. No dependencies.
+ *
+ *   const result = await window.HpmReadTextFile(file);   // File from <input>
+ *   if (result.ok) { result.text, result.charset, result.byteCount }
+ *   else           { result.reason: 'too-large' | 'failed', ... }
+ *
+ * Auto-detected encodings (priority order):
+ *   UTF-8 (with BOM)  →  UTF-16 LE/BE (with BOM)  →
+ *   UTF-8 (strict)    →  GB18030 (= GBK ⊃ GB2312) →  BIG5 →  ISO-8859-1
+ *
+ * Line endings normalized to \n. Null bytes stripped.
+ */
+(function () {
+  const MAX_BYTES = 64 * 1024 * 1024;    // 64 MB hard cap (covers very long novels)
+
+  // Some Safari versions before 16.4 don't ship gb18030/big5. Guard with try.
+  function isSupported(label) {
+    try { new TextDecoder(label, { fatal: false }); return true; }
+    catch (_) { return false; }
+  }
+
+  function bomCharset(b) {
+    if (b.length >= 3 && b[0] === 0xEF && b[1] === 0xBB && b[2] === 0xBF) return 'utf-8';
+    if (b.length >= 2 && b[0] === 0xFF && b[1] === 0xFE) return 'utf-16le';
+    if (b.length >= 2 && b[0] === 0xFE && b[1] === 0xFF) return 'utf-16be';
+    return null;
+  }
+
+  function strictDecodes(b, label) {
+    try {
+      new TextDecoder(label, { fatal: true }).decode(b);
+      return true;
+    } catch (_) { return false; }
+  }
+
+  function scoreCjk(b, label) {
+    if (!isSupported(label)) return -Infinity;
+    try {
+      const sample = b.length > 32768 ? b.subarray(0, 32768) : b;
+      const text = new TextDecoder(label, { fatal: false }).decode(sample);
+      let hits = 0, bad = 0;
+      for (let i = 0; i < text.length; i++) {
+        const cp = text.charCodeAt(i);
+        if      (cp === 0xFFFD)                  bad++;
+        else if (cp >= 0x4E00 && cp <= 0x9FFF)   hits++;
+        else if (cp >= 0x3400 && cp <= 0x4DBF)   hits++;
+      }
+      return hits - bad * 3;
+    } catch (_) { return -Infinity; }
+  }
+
+  function detect(bytes) {
+    const bom = bomCharset(bytes);
+    if (bom) return bom;
+    if (strictDecodes(bytes, 'utf-8')) return 'utf-8';
+    const gb   = scoreCjk(bytes, 'gb18030');
+    const big5 = scoreCjk(bytes, 'big5');
+    if (gb   >= big5 && gb   > 0) return 'gb18030';
+    if (big5 >  gb   && big5 > 0) return 'big5';
+    // Last resort — never throws but may produce replacement chars.
+    return isSupported('windows-1252') ? 'windows-1252' : 'iso-8859-1';
+  }
+
+  function stripBom(b, cs) {
+    if (cs === 'utf-8' && b.length >= 3 &&
+        b[0] === 0xEF && b[1] === 0xBB && b[2] === 0xBF) return b.subarray(3);
+    if (cs === 'utf-16le' && b.length >= 2 &&
+        b[0] === 0xFF && b[1] === 0xFE) return b.subarray(2);
+    if (cs === 'utf-16be' && b.length >= 2 &&
+        b[0] === 0xFE && b[1] === 0xFF) return b.subarray(2);
+    return b;
+  }
+
+  async function read(file) {
+    if (!file || file.size === 0) {
+      return { ok: false, reason: 'empty' };
+    }
+    if (file.size > MAX_BYTES) {
+      return { ok: false, reason: 'too-large', byteCount: file.size };
+    }
+    try {
+      // Use Blob.arrayBuffer if available; fall back to FileReader for old WebViews
+      let buf;
+      if (file.arrayBuffer) {
+        buf = await file.arrayBuffer();
+      } else {
+        buf = await new Promise((res, rej) => {
+          const r = new FileReader();
+          r.onload  = () => res(r.result);
+          r.onerror = () => rej(r.error || new Error("read failed"));
+          r.readAsArrayBuffer(file);
+        });
+      }
+      const bytes = new Uint8Array(buf);
+      const cs    = detect(bytes);
+      const dec   = new TextDecoder(cs, { fatal: false });
+      let text    = dec.decode(stripBom(bytes, cs));
+      text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\u0000/g, '');
+      return { ok: true, text, charset: cs.toUpperCase(), byteCount: bytes.length };
+    } catch (e) {
+      return { ok: false, reason: 'failed', error: String(e && e.message || e) };
+    }
+  }
+
+  function formatSize(b) {
+    if (b < 1024)        return b + ' B';
+    if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+    return (b / 1024 / 1024).toFixed(1) + ' MB';
+  }
+
+  window.HpmReadTextFile = read;
+  window.HpmReadTextFile.formatSize = formatSize;
+  window.HpmReadTextFile.MAX_BYTES  = MAX_BYTES;
+})();
+</script>
+<script>/* HpmChapters · parse chapter table of contents from plain TXT.
+ *
+ * Returns: [{ title, charStart }, ...] including a synthetic "正文 / Prologue"
+ * entry at index 0 if there's text before the first heading.
+ *
+ * Recognizes (line-anchored):
+ *   第X章 / 第X节 / 第X回 / 第X卷 / 第X篇 / 第X部 / 第X集
+ *   楔子 · 序章 · 序言 · 前言 · 引子 · 尾声 · 后记
+ *   Chapter N / CHAPTER N / Ch. N / Part N / Book N
+ *   Roman numerals at start of line
+ *
+ * For very long books (1MB+ text) parsing happens in chunks so the UI
+ * stays responsive. Use `parseAsync` for non-blocking parsing.
+ */
+(function () {
+  const CN_NUM = "[一二三四五六七八九十百千万零两\\d]+";
+  const CN_HEAD = new RegExp("^[\\s\\u3000]*第" + CN_NUM + "[章节回卷篇部集][\\s\\S]{0,60}$");
+  const CN_PREAMBLE = /^[\s\u3000]*(楔子|序章|序言|序|前言|引子|尾声|后记|附录|目录|致谢)[\s\S]{0,60}$/;
+  const EN_HEAD = /^[\s]*(chapter|ch\.|part|book)\s*[ivxlcdm\d]+[\s\S]{0,80}$/i;
+  const ROMAN_HEAD = /^[\s]*[IVXLCDM]{1,6}\.?\s*$/;
+
+  function isHeading(line) {
+    if (!line) return false;
+    const trimmed = line.trim();
+    if (trimmed.length === 0 || trimmed.length > 80) return false;
+    return CN_HEAD.test(trimmed) || CN_PREAMBLE.test(trimmed) ||
+           EN_HEAD.test(trimmed) || ROMAN_HEAD.test(trimmed);
+  }
+
+  // Synchronous parser — fine for files under ~2 MB.
+  function parse(text) {
+    if (!text) return [{ title: "正文", charStart: 0 }];
+    const chapters = [];
+    let pos = 0;
+    const lines = text.split("\n");
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (isHeading(line)) chapters.push({ title: line.trim(), charStart: pos });
+      pos += line.length + 1;
+    }
+    if (chapters.length === 0) return [{ title: "正文", charStart: 0 }];
+    if (chapters[0].charStart > 80) chapters.unshift({ title: "开头", charStart: 0 });
+    return chapters;
+  }
+
+  // Max bytes per pageable "chapter". If a real chapter is bigger we split it
+  // into sub-pages so the reader stays responsive even for one-chapter 12MB
+  // novels. ~20 000 chars ≈ ~50 KB UTF-8 ≈ a comfortable 6-page chapter.
+  const MAX_CHAPTER_LEN = 20000;
+
+  // Async chunked parser — keeps UI responsive on huge files.
+  // Returns a promise that resolves to the same shape.
+  // Calls onProgress(0..1) periodically if provided.
+  function parseAsync(text, onProgress) {
+    return new Promise((resolve) => {
+      if (!text) { resolve([{ title: "正文", charStart: 0 }]); return; }
+      const raw = [];
+      let pos = 0;
+      let lineIdx = 0;
+      const lines = text.split("\n");
+      const total = lines.length;
+      const CHUNK = 4000;
+
+      function step() {
+        const start = lineIdx;
+        const end = Math.min(total, start + CHUNK);
+        for (let i = start; i < end; i++) {
+          const line = lines[i];
+          if (isHeading(line)) raw.push({ title: line.trim(), charStart: pos });
+          pos += line.length + 1;
+        }
+        lineIdx = end;
+        if (onProgress) try { onProgress(end / total); } catch (_) {}
+        if (lineIdx < total) {
+          if (window.requestIdleCallback) window.requestIdleCallback(step, { timeout: 50 });
+          else setTimeout(step, 0);
+        } else {
+          finishParse(raw, text, resolve);
+        }
+      }
+      step();
+    });
+  }
+
+  function finishParse(raw, text, resolve) {
+    if (raw.length === 0) raw.push({ title: "正文", charStart: 0 });
+    else if (raw[0].charStart > 80) raw.unshift({ title: "开头", charStart: 0 });
+
+    // Now split any chapter longer than MAX_CHAPTER_LEN into sub-pages,
+    // breaking on paragraph boundaries.
+    const out = [];
+    for (let i = 0; i < raw.length; i++) {
+      const ch = raw[i];
+      const endAbs = i + 1 < raw.length ? raw[i + 1].charStart : text.length;
+      const len = endAbs - ch.charStart;
+      if (len <= MAX_CHAPTER_LEN) {
+        out.push(ch);
+      } else {
+        const pages = Math.ceil(len / MAX_CHAPTER_LEN);
+        // Pick split points at the nearest "\n" after each ideal boundary
+        let cursor = ch.charStart;
+        for (let p = 0; p < pages; p++) {
+          const idealEnd = Math.min(endAbs, ch.charStart + (p + 1) * MAX_CHAPTER_LEN);
+          let split;
+          if (p === pages - 1) {
+            split = endAbs;
+          } else {
+            // search forward for a paragraph break
+            split = text.indexOf("\n", idealEnd);
+            if (split === -1 || split > idealEnd + 2000) split = idealEnd;
+            else split++;        // include the \n in the previous page
+          }
+          out.push({
+            title: pages > 1 ? `${ch.title} · ${p + 1}/${pages}` : ch.title,
+            charStart: cursor,
+            virtual: p > 0,        // mark synthetic sub-pages
+          });
+          cursor = split;
+        }
+      }
+    }
+    resolve(out);
+  }
+
+  function currentChapter(chapters, charIndex) {
+    if (!chapters || !chapters.length) return -1;
+    let lo = 0, hi = chapters.length - 1, ans = 0;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (chapters[mid].charStart <= charIndex) { ans = mid; lo = mid + 1; }
+      else hi = mid - 1;
+    }
+    return ans;
+  }
+
+  /** End-char of chapter [i] (exclusive). For chapter slicing. */
+  function chapterEnd(chapters, i, totalLen) {
+    return i + 1 < chapters.length ? chapters[i + 1].charStart : totalLen;
+  }
+
+  window.HpmChapters = { parse, parseAsync, currentChapter, chapterEnd, isHeading };
+})();
+</script>
+<script>/* HpmStore · tiny typed localStorage wrapper.
+ *
+ *   HpmStore.get('voiceId', 'sweetgirl')   // value | default
+ *   HpmStore.set('voiceId', 'aria')
+ *   HpmStore.useStored('voiceId', 'sweetgirl')  -> [value, setValue]  (React hook)
+ *
+ * Keys are namespaced under "hpm:" so they don't collide.
+ */
+(function () {
+  const NS = "hpm:";
+  function get(key, fallback) {
+    try {
+      const raw = localStorage.getItem(NS + key);
+      if (raw == null) return fallback;
+      return JSON.parse(raw);
+    } catch (_) { return fallback; }
+  }
+  function set(key, val) {
+    try {
+      if (val === undefined) localStorage.removeItem(NS + key);
+      else localStorage.setItem(NS + key, JSON.stringify(val));
+    } catch (_) {}
+  }
+  function useStored(key, fallback) {
+    const [v, setV] = React.useState(() => get(key, fallback));
+    React.useEffect(() => { set(key, v); }, [v]);
+    return [v, setV];
+  }
+  window.HpmStore = { get, set, useStored };
+})();
+</script>
+<script>/* HpmDB · IndexedDB-backed book text store.
+ *
+ * Why: localStorage has a 5–10 MB quota per origin, and storing a 12 MB book
+ * in it either throws or freezes the tab when serializing. IndexedDB is the
+ * right home for the big strings. Metadata (title, palette, progress) stays
+ * in localStorage via HpmStore so the library list is instant.
+ *
+ *   await HpmDB.setText(bookId, fullText)
+ *   await HpmDB.getText(bookId)           -> string | null
+ *   await HpmDB.deleteText(bookId)
+ *   await HpmDB.allIds()                  -> string[]
+ */
+(function () {
+  const DB_NAME = "hpm";
+  const DB_VER  = 1;
+  const STORE   = "texts";
+
+  let _db = null;
+  function open() {
+    if (_db) return Promise.resolve(_db);
+    return new Promise((resolve, reject) => {
+      if (!window.indexedDB) return reject(new Error("indexedDB unsupported"));
+      const req = indexedDB.open(DB_NAME, DB_VER);
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
+      };
+      req.onsuccess = () => { _db = req.result; resolve(_db); };
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  function tx(mode, fn) {
+    return open().then(db => new Promise((resolve, reject) => {
+      const t = db.transaction(STORE, mode);
+      const s = t.objectStore(STORE);
+      let result;
+      Promise.resolve(fn(s, (r) => { result = r; })).catch(reject);
+      t.oncomplete = () => resolve(result);
+      t.onerror    = () => reject(t.error);
+      t.onabort    = () => reject(t.error);
+    }));
+  }
+
+  async function setText(id, text) {
+    return tx("readwrite", (s) => { s.put(text, id); });
+  }
+  async function getText(id) {
+    return tx("readonly", (s, ret) => new Promise((res) => {
+      const r = s.get(id);
+      r.onsuccess = () => { ret(r.result == null ? null : r.result); res(); };
+      r.onerror   = () => { ret(null); res(); };
+    }));
+  }
+  async function deleteText(id) {
+    return tx("readwrite", (s) => { s.delete(id); });
+  }
+  async function allIds() {
+    return tx("readonly", (s, ret) => new Promise((res) => {
+      const r = s.getAllKeys();
+      r.onsuccess = () => { ret(Array.from(r.result || [])); res(); };
+      r.onerror   = () => { ret([]); res(); };
+    }));
+  }
+
+  window.HpmDB = { setText, getText, deleteText, allIds };
+})();
+</script>
+<script>/* HpmFetchUrl · pull a remote TXT file into HPM.
+ *
+ *   await HpmFetchUrl(url) -> { ok: true, text, charset, byteCount, name }
+ *                          | { ok: false, reason: 'cors'|'http'|'too-large'|'failed', error }
+ *
+ * Tries the URL directly first; if CORS blocks it, retries via a public CORS
+ * proxy. Falls through the same multi-encoding decoder as the local file
+ * uploader, so GBK / BIG5 / UTF-16 TXT all work.
+ */
+(function () {
+  const MAX_BYTES = 64 * 1024 * 1024;
+
+  // Public CORS proxies (round-robin)
+  const PROXIES = [
+    (u) => "https://corsproxy.io/?" + encodeURIComponent(u),
+    (u) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
+  ];
+
+  // Smart URL transform — convert common share links to direct-download URLs
+  function normalize(url) {
+    try {
+      const u = new URL(url.trim());
+      // GitHub blob → raw
+      if (u.hostname === "github.com" && u.pathname.includes("/blob/")) {
+        return "https://raw.githubusercontent.com" +
+               u.pathname.replace("/blob/", "/");
+      }
+      // Gist → raw
+      if (u.hostname === "gist.github.com" && !u.pathname.endsWith("/raw")) {
+        return url + "/raw";
+      }
+      // Dropbox: dl=0 → raw=1
+      if (u.hostname.endsWith("dropbox.com")) {
+        u.searchParams.set("raw", "1");
+        u.searchParams.delete("dl");
+        return u.toString();
+      }
+      return url;
+    } catch (_) { return url; }
+  }
+
+  function inferName(url) {
+    try {
+      const u = new URL(url);
+      const parts = u.pathname.split("/");
+      const last = parts[parts.length - 1] || "remote";
+      return decodeURIComponent(last) || "remote.txt";
+    } catch (_) { return "remote.txt"; }
+  }
+
+  // Same encoding-detection routine as text-file-reader.js
+  function detectAndDecode(bytes) {
+    if (bytes.length >= 3 && bytes[0] === 0xEF && bytes[1] === 0xBB && bytes[2] === 0xBF)
+      return decode(bytes.subarray(3), "utf-8");
+    if (bytes.length >= 2 && bytes[0] === 0xFF && bytes[1] === 0xFE)
+      return decode(bytes.subarray(2), "utf-16le");
+    if (bytes.length >= 2 && bytes[0] === 0xFE && bytes[1] === 0xFF)
+      return decode(bytes.subarray(2), "utf-16be");
+    try {
+      new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+      return decode(bytes, "utf-8");
+    } catch (_) {}
+    const gb   = score(bytes, "gb18030");
+    const big5 = score(bytes, "big5");
+    if (gb   >= big5 && gb   > 0) return decode(bytes, "gb18030");
+    if (big5 >  gb   && big5 > 0) return decode(bytes, "big5");
+    return decode(bytes, "windows-1252");
+  }
+  function decode(bytes, cs) {
+    const text = new TextDecoder(cs, { fatal: false }).decode(bytes)
+      .replace(/\r\n/g, "\n").replace(/\r/g, "\n").replace(/\u0000/g, "");
+    return { text, charset: cs.toUpperCase() };
+  }
+  function score(bytes, cs) {
+    try {
+      const sample = bytes.length > 32768 ? bytes.subarray(0, 32768) : bytes;
+      const t = new TextDecoder(cs, { fatal: false }).decode(sample);
+      let hits = 0, bad = 0;
+      for (let i = 0; i < t.length; i++) {
+        const cp = t.charCodeAt(i);
+        if      (cp === 0xFFFD)                bad++;
+        else if (cp >= 0x4E00 && cp <= 0x9FFF) hits++;
+        else if (cp >= 0x3400 && cp <= 0x4DBF) hits++;
+      }
+      return hits - bad * 3;
+    } catch (_) { return 0; }
+  }
+
+  async function tryFetch(url) {
+    const res = await fetch(url, { redirect: "follow" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const cl = res.headers.get("content-length");
+    if (cl && parseInt(cl, 10) > MAX_BYTES) {
+      const err = new Error("too-large");
+      err.byteCount = parseInt(cl, 10);
+      throw err;
+    }
+    const buf = await res.arrayBuffer();
+    if (buf.byteLength > MAX_BYTES) {
+      const err = new Error("too-large");
+      err.byteCount = buf.byteLength;
+      throw err;
+    }
+    return new Uint8Array(buf);
+  }
+
+  async function fetchUrl(rawUrl) {
+    const url = normalize(rawUrl);
+    let bytes = null;
+    let lastError = null;
+    // 1. Direct
+    try { bytes = await tryFetch(url); }
+    catch (e) { lastError = e; }
+    // 2. Proxies
+    if (!bytes) {
+      for (const proxy of PROXIES) {
+        try { bytes = await tryFetch(proxy(url)); if (bytes) break; }
+        catch (e) { lastError = e; }
+      }
+    }
+    if (!bytes) {
+      if (lastError && lastError.message === "too-large") {
+        return { ok: false, reason: "too-large", byteCount: lastError.byteCount };
+      }
+      return { ok: false, reason: "cors", error: lastError && lastError.message };
+    }
+    try {
+      const { text, charset } = detectAndDecode(bytes);
+      return {
+        ok: true, text, charset,
+        byteCount: bytes.length,
+        name: inferName(url),
+      };
+    } catch (e) {
+      return { ok: false, reason: "failed", error: String(e) };
+    }
+  }
+
+  fetchUrl.normalize = normalize;
+  fetchUrl.inferName = inferName;
+  window.HpmFetchUrl = fetchUrl;
+})();
+</script>
+<script>/* HpmTts · robust Web Speech wrapper.
+ *
+ *   const tts = window.HpmTts;
+ *   tts.onState(fn) -> unsubscribe
+ *   tts.speak(text, {lang, gender, voiceURI, rate, pitch, onEnd})
+ *   tts.pause() / tts.resume() / tts.stop()
+ *   tts.setRate(r)
+ *
+ * Robustness:
+ *   • Chunks long text at sentence boundaries (max 180 chars).
+ *   • Drives the queue manually — speaks ONE chunk at a time, advances on
+ *     'end'. No queue-stall bug from `synth.speak()` flooding.
+ *   • Watchdog: if `state.playing` is true but the engine is silent AND
+ *     not paused for >1.5s, auto-resume from the current char index.
+ *   • Mobile-keepalive: brief pause+resume every 8s only while playing,
+ *     to defeat Chrome's idle timeout. Stops touching the engine when idle.
+ *   • Resume is idempotent — clicking play after a freeze restarts the
+ *     queue from the last known character index.
+ */
+(function () {
+  // ─── Native TTS bridges (preferred when running inside an APK) ─────────
+  // Order: Capacitor plugin → median.co bridge → window.speechSynthesis.
+  const cap = window.Capacitor;
+  const capTts = cap && cap.Plugins && cap.Plugins.TextToSpeech;
+
+  // median.co exposes window.median or window.gonative depending on version.
+  // The TTS feature ships under the "Text to Speech" add-on; if enabled, the
+  // bridge function below is reachable.
+  const median = window.median || window.gonative;
+  const medianTts = median && (median.tts || (median.run && {
+    speak: (o) => median.run({ command: "tts.speak", data: o }),
+    stop:  ()  => median.run({ command: "tts.stop" }),
+  }));
+
+  const NATIVE = !!capTts;
+  const MEDIAN = !NATIVE && !!medianTts;
+  const synth = (NATIVE || MEDIAN) ? null : window.speechSynthesis;
+
+  if (!NATIVE && !MEDIAN && !synth) {
+    // Even without TTS we still want HpmTts to exist so the UI doesn't crash.
+    // We expose a `unsupported: true` stub; the app's UI shows a clear error.
+    window.HpmTts = {
+      unsupported: true,
+      onState: (fn) => { fn({ ready: false, playing: false, paused: false }); return () => {}; },
+      speak: () => {}, pause: () => {}, resume: () => {}, stop: () => {}, setRate: () => {},
+      voices: () => [], ready: () => Promise.resolve([]),
+      state: { ready: false, playing: false, paused: false },
+    };
+    return;
+  }
+
+  const listeners = new Set();
+  let state = {
+    ready: false, playing: false, paused: false,
+    voice: null, rate: 1.0, pitch: 1.0,
+    charIndex: 0, totalChars: 0,
+  };
+  const emit = () => { for (const fn of listeners) { try { fn(state); } catch (_) {} } };
+
+  // ─── Voice readiness ────
+  let readyResolve;
+  const readyP = new Promise(r => { readyResolve = r; });
+  function refreshVoices() {
+    if (NATIVE) {
+      // Native is ready as soon as plugin is reachable
+      state = { ...state, ready: true };
+      readyResolve([]); emit();
+      return;
+    }
+    const vs = synth.getVoices();
+    if (vs.length && !state.ready) {
+      state = { ...state, ready: true };
+      readyResolve(vs); emit();
+    }
+  }
+  refreshVoices();
+  if (!NATIVE) synth.onvoiceschanged = refreshVoices;
+
+  // ---- Chunking ----
+  const IS_MOBILE = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent || "");
+  const MAX_CHUNK = IS_MOBILE ? 120 : 180;
+
+  function chunkText(text, maxLen = MAX_CHUNK) {
+    const out = [];
+    const sentences = text.match(/[^。！？!?\.\n]+[。！？!?\.\n]?/g) || [text];
+    let buf = "";
+    for (const s of sentences) {
+      if ((buf + s).length > maxLen && buf) { out.push(buf); buf = ""; }
+      if (s.length > maxLen) {
+        for (let i = 0; i < s.length; i += maxLen) out.push(s.slice(i, i + maxLen));
+      } else { buf += s; }
+    }
+    if (buf) out.push(buf);
+    return out.filter(s => s.trim().length);
+  }
+
+  // ---- Voice picking ----
+  const VOICE_RE_FEMALE = /(female|woman|girl|xiaoxiao|xiaoyi|xiaomeng|xiaohan|xiaomo|xiaoqiu|xiaoxuan|xiaorui|aria|jenny|zira|samantha|karen|tessa|tingting|sin-?ji|mei-?jia|ya-?ling|kyoko|mizuki|fiona|fang|xiaobei|晓|薇|婷|莹|妍|甜|蜜|柔|雪|月)/i;
+  const VOICE_RE_MALE   = /(male|\bman\b|boy|yunxi|yunjian|yunyang|yunfeng|yunhao|kangkang|guy|david|alex|daniel|fred|tom|leo|刚|强|健|希|杰)/i;
+
+  // Pick a voice trying, in order:
+  //   1) explicit voiceURI
+  //   2) any hint string in `voiceHints` (substring, case-insensitive)
+  //   3) gender heuristic on name
+  //   4) default voice in the language pool
+  function pickVoice(lang, voiceURI, gender, voiceHints) {
+    const vs = synth.getVoices();
+    if (voiceURI) { const v = vs.find(x => x.voiceURI === voiceURI); if (v) return v; }
+    const exact   = vs.filter(x => x.lang && x.lang.toLowerCase() === lang.toLowerCase());
+    const prefix  = lang.split("-")[0].toLowerCase();
+    const partial = vs.filter(x => x.lang && x.lang.toLowerCase().startsWith(prefix));
+    const pool = exact.length ? exact : (partial.length ? partial : vs);
+    if (voiceHints && voiceHints.length) {
+      for (const hint of voiceHints) {
+        if (!hint) continue;
+        const re = new RegExp(hint, "i");
+        const match = pool.find(v => re.test(v.name) || re.test(v.voiceURI || ""));
+        if (match) return match;
+      }
+    }
+    if (gender) {
+      const re = gender === "female" ? VOICE_RE_FEMALE : VOICE_RE_MALE;
+      const matched = pool.find(v => re.test(v.name));
+      if (matched) return matched;
+    }
+    return pool.find(x => x.default) || pool[0] || null;
+  }
+
+  function detectLang(text) {
+    const sample = text.slice(0, 200);
+    const han   = (sample.match(/[\u4E00-\u9FFF\u3400-\u4DBF]/g) || []).length;
+    const hira  = (sample.match(/[\u3040-\u309F\u30A0-\u30FF]/g) || []).length;
+    const latin = (sample.match(/[A-Za-z]/g) || []).length;
+    if (hira > 5) return "ja-JP";
+    if (han > latin) return "zh-CN";
+    return "en-US";
+  }
+
+  // ---- Playback engine (drives one chunk at a time) ----
+  let session = null;     // {chunks, idx, baseChar, opts, voice, rate, pitch, onEnd}
+  let watchdog = null;
+  let keepalive = null;
+
+  function clearTimers() {
+    if (watchdog)  { clearInterval(watchdog);  watchdog  = null; }
+    if (keepalive) { clearInterval(keepalive); keepalive = null; }
+  }
+
+  function startTimers() {
+    clearTimers();
+    // Watchdog: if we think we're playing but the engine has gone silent
+    // (no .speaking, not .paused), retry the CURRENT chunk first; only skip
+    // forward as a last resort.
+    let silentSince = 0;
+    let retried = false;
+    watchdog = setInterval(() => {
+      if (!session || state.paused) { silentSince = 0; retried = false; return; }
+      if (synth.speaking || synth.pending) { silentSince = 0; retried = false; return; }
+      silentSince += 500;
+      if (silentSince >= 2500) {
+        silentSince = 0;
+        if (!retried) {
+          // First recovery: re-speak the current chunk
+          retried = true;
+          speakCurrentChunk();
+        } else if (session.idx < session.chunks.length - 1) {
+          // Second recovery: advance and try the next one
+          retried = false;
+          session.idx++;
+          speakCurrentChunk();
+        } else {
+          finish();
+        }
+      }
+    }, 500);
+    // Desktop-only keepalive. On mobile the pause+resume trick actually
+    // BREAKS playback in several Chinese-system Chromiums, so we skip it.
+    if (!IS_MOBILE) {
+      keepalive = setInterval(() => {
+        if (!session || state.paused) return;
+        if (synth.speaking && !synth.paused) {
+          try { synth.pause(); synth.resume(); } catch (_) {}
+        }
+      }, 8000);
+    }
+  }
+
+  function speakCurrentChunk() {
+    if (!session) return;
+    const { chunks, idx, voice, rate, pitch, opts } = session;
+    if (idx >= chunks.length) { finish(); return; }
+    // Always cancel before speaking to avoid queue interleave
+    try { synth.cancel(); } catch (_) {}
+
+    const text = chunks[idx];
+    const u = new SpeechSynthesisUtterance(text);
+    if (voice) u.voice = voice;
+    u.lang = (voice && voice.lang) || (opts.lang || "zh-CN");
+    u.rate = rate;
+    u.pitch = pitch;
+    u.volume = 1;
+
+    const chunkBase = session.baseChar + chunkOffset(chunks, idx);
+
+    u.onstart = () => {
+      state = { ...state, playing: true, paused: false };
+      emit();
+    };
+    u.onboundary = (e) => {
+      state = { ...state, charIndex: chunkBase + (e.charIndex || 0) };
+      emit();
+    };
+    u.onend = () => {
+      // Advance to next chunk
+      if (!session) return;
+      state = { ...state, charIndex: chunkBase + text.length };
+      emit();
+      session.idx++;
+      if (session.idx < session.chunks.length) {
+        // Tiny delay helps mobile Safari keep going reliably
+        setTimeout(() => speakCurrentChunk(), 30);
+      } else {
+        finish();
+      }
+    };
+    u.onerror = (e) => {
+      // 'interrupted' / 'canceled' are normal during seek; ignore
+      if (e && (e.error === "interrupted" || e.error === "canceled")) return;
+      // Try to advance past a bad chunk
+      if (session) {
+        session.idx++;
+        if (session.idx < session.chunks.length) { speakCurrentChunk(); return; }
+      }
+      finish();
+    };
+
+    try { synth.speak(u); }
+    catch (e) { setTimeout(() => speakCurrentChunk(), 100); }
+  }
+
+  function chunkOffset(chunks, idx) {
+    let off = 0;
+    for (let i = 0; i < idx; i++) off += chunks[i].length;
+    return off;
+  }
+
+  function finish() {
+    const wasOnEnd = session && session.opts && session.opts.onEnd;
+    session = null;
+    clearTimers();
+    state = { ...state, playing: false, paused: false };
+    emit();
+    if (wasOnEnd) try { wasOnEnd(); } catch (_) {}
+  }
+
+  // ---- Public API ----
+  let wakeLock = null;
+  async function acquireWakeLock() {
+    try {
+      if (navigator.wakeLock && !wakeLock) {
+        wakeLock = await navigator.wakeLock.request("screen");
+        wakeLock.addEventListener("release", () => { wakeLock = null; });
+      }
+    } catch (_) {}
+  }
+  function releaseWakeLock() {
+    try { if (wakeLock) { wakeLock.release(); wakeLock = null; } } catch (_) {}
+  }
+  // Re-grab wake lock + kick the engine if it stalled while the page was hidden
+  document.addEventListener("visibilitychange", () => {
+    if (NATIVE) return;
+    if (document.visibilityState === "visible" && session && !state.paused) {
+      acquireWakeLock();
+      if (!synth.speaking && !synth.pending) {
+        setTimeout(() => { if (session && !state.paused) speakCurrentChunk(); }, 200);
+      }
+    }
+  });
+
+  function speak(text, opts = {}) {
+    if (NATIVE) return nativeSpeak(text, opts);
+    if (MEDIAN) return medianSpeak(text, opts);
+    stop();
+    if (!text || !text.trim()) return;
+    const lang = opts.lang || detectLang(text);
+    const voice = pickVoice(lang, opts.voiceURI, opts.gender, opts.voiceHints);
+    const rate  = clampRate(opts.rate || state.rate || 1.0);
+    const pitch = opts.pitch == null ? 1.0 : opts.pitch;
+    const chunks = chunkText(text);
+    session = {
+      chunks, idx: 0, baseChar: opts.baseChar || 0,
+      voice, rate, pitch, opts,
+    };
+    state = {
+      ...state, voice, rate, pitch,
+      totalChars: text.length, charIndex: opts.baseChar || 0,
+      playing: true, paused: false,
+    };
+    emit();
+    startTimers();
+    acquireWakeLock();
+    speakCurrentChunk();
+  }
+
+  function pause() {
+    if (NATIVE) return nativePause();
+    if (MEDIAN) return medianPause();
+    if (!session) return;
+    try { synth.pause(); } catch (_) {}
+    state = { ...state, playing: false, paused: true };
+    emit();
+  }
+  function resume() {
+    if (NATIVE) return nativeResume();
+    if (MEDIAN) return medianResume();
+    if (state.paused && session) {
+      try { synth.resume(); } catch (_) {}
+      // Some browsers don't actually resume after a long pause — if not
+      // speaking within 400ms, re-speak from current chunk.
+      const idx = session.idx;
+      setTimeout(() => {
+        if (!session) return;
+        if (!synth.speaking) { session.idx = idx; speakCurrentChunk(); }
+      }, 400);
+      state = { ...state, playing: true, paused: false };
+      emit();
+      return;
+    }
+    // Hard resume after a freeze: nothing pending, but we know charIndex.
+    // Caller (app) should call speak() with the remainder; we only handle
+    // the simple resume here.
+  }
+  function stop() {
+    if (NATIVE) return nativeStop();
+    if (MEDIAN) return medianStop();
+    session = null;
+    clearTimers();
+    releaseWakeLock();
+    try { synth.cancel(); } catch (_) {}
+    state = { ...state, playing: false, paused: false };
+    emit();
+  }
+  // ─── Native Android TTS path (Capacitor + @capacitor-community/text-to-speech) ──
+  // Speaks one chunk at a time, watching for completion via the plugin's
+  // promise resolution. Uses an estimator for char-progress (the plugin
+  // doesn't fire word boundaries on Android).
+  let nativeSession = null;
+  async function nativeSpeak(text, opts = {}) {
+    nativeStop();
+    if (!text || !text.trim()) return;
+    const rate  = clampRate(opts.rate || state.rate || 1.0);
+    const pitch = opts.pitch == null ? 1.0 : opts.pitch;
+    const lang  = opts.lang || "zh-CN";
+    const chunks = chunkText(text, 200);
+    nativeSession = { chunks, idx: 0, lang, rate, pitch, opts, cancelled: false };
+    state = {
+      ...state, rate, pitch, voice: { name: "native-" + lang, lang },
+      totalChars: text.length, charIndex: opts.baseChar || 0,
+      playing: true, paused: false,
+    };
+    emit();
+    acquireWakeLock();
+    await nativeSpeakNext();
+  }
+  async function nativeSpeakNext() {
+    if (!nativeSession || nativeSession.cancelled) return;
+    const s = nativeSession;
+    if (s.idx >= s.chunks.length) { finishNative(); return; }
+    const text = s.chunks[s.idx];
+    try {
+      await capTts.speak({
+        text, lang: s.lang, rate: s.rate, pitch: s.pitch, volume: 1.0,
+        category: "playback",
+      });
+    } catch (e) {
+      if (e && /interrupt|cancel/i.test(String(e.message || ""))) return;
+    }
+    if (!nativeSession || nativeSession.cancelled) return;
+    // Advance char counter to the start of next chunk
+    const startOfNext = chunkOffset(s.chunks, s.idx + 1);
+    state = { ...state, charIndex: (s.opts.baseChar || 0) + startOfNext };
+    emit();
+    s.idx++;
+    setTimeout(nativeSpeakNext, 30);
+  }
+  async function nativePause() {
+    if (!nativeSession) return;
+    try { await capTts.stop(); } catch (_) {}
+    state = { ...state, playing: false, paused: true };
+    emit();
+  }
+  async function nativeResume() {
+    if (!nativeSession || !state.paused) return;
+    state = { ...state, playing: true, paused: false };
+    emit();
+    nativeSpeakNext();
+  }
+  async function nativeStop() {
+    if (nativeSession) nativeSession.cancelled = true;
+    nativeSession = null;
+    try { if (capTts) await capTts.stop(); } catch (_) {}
+    releaseWakeLock();
+    state = { ...state, playing: false, paused: false };
+    emit();
+  }
+  function finishNative() {
+    nativeSession = null;
+    releaseWakeLock();
+    state = { ...state, playing: false, paused: false };
+    emit();
+  }
+
+  // ─── median.co bridge path ─────────────────────────────────────────────
+  // median.co's TTS add-on exposes `median.tts.speak({text, lang, rate, pitch})`
+  // and `median.tts.stop()`. It doesn't fire completion events reliably, so
+  // we chunk and re-call after a time-based estimate.
+  let medianSession = null;
+  let medianTimer = null;
+  async function medianSpeak(text, opts = {}) {
+    medianStop();
+    if (!text || !text.trim()) return;
+    const rate  = clampRate(opts.rate || state.rate || 1.0);
+    const pitch = opts.pitch == null ? 1.0 : opts.pitch;
+    const lang  = opts.lang || "zh-CN";
+    const chunks = chunkText(text, 180);
+    medianSession = { chunks, idx: 0, lang, rate, pitch, opts, cancelled: false };
+    state = {
+      ...state, rate, pitch, voice: { name: "median-" + lang, lang },
+      totalChars: text.length, charIndex: opts.baseChar || 0,
+      playing: true, paused: false,
+    };
+    emit();
+    medianSpeakNext();
+  }
+  async function medianSpeakNext() {
+    if (!medianSession || medianSession.cancelled) return;
+    const s = medianSession;
+    if (s.idx >= s.chunks.length) { finishMedian(); return; }
+    const text = s.chunks[s.idx];
+    try {
+      await medianTts.speak({ text, lang: s.lang, rate: s.rate, pitch: s.pitch });
+    } catch (_) {}
+    if (!medianSession || medianSession.cancelled) return;
+    // Time-based completion estimate (~5 chars/sec at 1.0× Chinese)
+    const estMs = Math.max(800, (text.length / (5 * s.rate)) * 1000 + 200);
+    if (medianTimer) clearTimeout(medianTimer);
+    medianTimer = setTimeout(() => {
+      if (!medianSession || medianSession.cancelled) return;
+      const startOfNext = chunkOffset(s.chunks, s.idx + 1);
+      state = { ...state, charIndex: (s.opts.baseChar || 0) + startOfNext };
+      emit();
+      s.idx++;
+      medianSpeakNext();
+    }, estMs);
+  }
+  async function medianPause() {
+    if (!medianSession) return;
+    try { await medianTts.stop(); } catch (_) {}
+    if (medianTimer) { clearTimeout(medianTimer); medianTimer = null; }
+    state = { ...state, playing: false, paused: true };
+    emit();
+  }
+  async function medianResume() {
+    if (!medianSession || !state.paused) return;
+    state = { ...state, playing: true, paused: false };
+    emit();
+    medianSpeakNext();
+  }
+  async function medianStop() {
+    if (medianSession) medianSession.cancelled = true;
+    medianSession = null;
+    if (medianTimer) { clearTimeout(medianTimer); medianTimer = null; }
+    try { if (medianTts) await medianTts.stop(); } catch (_) {}
+    state = { ...state, playing: false, paused: false };
+    emit();
+  }
+  function finishMedian() {
+    medianSession = null;
+    state = { ...state, playing: false, paused: false };
+    emit();
+  }
+
+  function setRate(r) {
+    state = { ...state, rate: clampRate(r) };
+    emit();
+    // Applies on the next chunk boundary automatically.
+    if (session) session.rate = state.rate;
+  }
+  function clampRate(r) { return Math.min(3.0, Math.max(0.5, Number(r) || 1.0)); }
+
+  function voices() { return synth ? synth.getVoices() : []; }
+  function onState(fn) { listeners.add(fn); fn(state); return () => listeners.delete(fn); }
+  function ready() { return state.ready ? Promise.resolve(voices()) : readyP; }
+
+  window.HpmTts = {
+    unsupported: false,
+    native: NATIVE,
+    median: MEDIAN,
+    engine: NATIVE ? "capacitor" : (MEDIAN ? "median" : "web"),
+    speak, pause, resume, stop, setRate,
+    voices, onState, ready,
+    detectLang, pickVoice,
+    get state() { return state; },
+  };
+})();
+</script>
+<script type="text/babel">/* HPM UI Kit components — Android app screens.
+   Load order in index.html:
+     react, react-dom, babel
+     android-frame.jsx (defines AndroidFrame)
+     components.jsx (this file — defines all screen pieces + screens)
+     app.jsx (mounts <App/>)
+*/
+
+// ---------- Tiny SVG icons (Lucide-style 1.5 stroke) ----------
+const Icon = ({ name, size = 22, color = "currentColor", strokeWidth = 1.5, fill = "none" }) => {
+  const paths = {
+    play:    <path d="M8 5v14l11-7z" fill={color} stroke="none" />,
+    pause:   <g fill={color} stroke="none"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></g>,
+    prev:    <g fill={color} stroke="none"><rect x="6" y="5" width="2" height="14"/><path d="M9.5 12 18 6v12z"/></g>,
+    next:    <g fill={color} stroke="none"><rect x="16" y="5" width="2" height="14"/><path d="M6 18l8.5-6L6 6z"/></g>,
+    back:    <polyline points="15 18 9 12 15 6" />,
+    menu:    <g><line x1="4" y1="6"  x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></g>,
+    plus:    <g><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></g>,
+    search:  <g><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></g>,
+    settings:<g><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5h0a1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></g>,
+    library: <g><path d="M3 21V8a2 2 0 0 1 2-2h3l2-3h4l2 3h3a2 2 0 0 1 2 2v13"/><circle cx="12" cy="14" r="4"/></g>,
+    voice:   <g><path d="M4 9 C4 6.5 6 4.5 8.5 4.5 L15.5 4.5 C18 4.5 20 6.5 20 9 L20 12 C20 14.5 18 16.5 15.5 16.5 L12 16.5 L8 20 L8 16.5 C5.8 16.4 4 14.4 4 12 Z"/><path d="M9 10v1.5M12 9.5V12M15 10v1.5"/></g>,
+    download:<g><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></g>,
+    txt:     <g><path d="M6 3h8l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></g>,
+    check:   <polyline points="20 6 9 17 4 12" strokeWidth="1.8" />,
+    timer:   <g><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g>,
+    dots:    <g fill={color} stroke="none"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></g>,
+    chevron: <polyline points="9 18 15 12 9 6" />,
+    moon:    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />,
+    close:   <g><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g>,
+    waveSm:  <g fill={color} stroke="none"><rect x="3"  y="9"  width="2" height="6"  rx="1"/><rect x="7"  y="5"  width="2" height="14" rx="1"/><rect x="11" y="8"  width="2" height="8"  rx="1"/><rect x="15" y="3"  width="2" height="18" rx="1"/><rect x="19" y="7"  width="2" height="10" rx="1"/></g>,
+    edit:    <g><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4z"/></g>,
+    trash:   <g><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></g>,
+  };
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
+      {paths[name] || null}
+    </svg>
+  );
+};
+
+// ---------- Book cover (procedural) ----------
+const BookCover = ({ title, palette = "amber", size = 60, radius = 10, fontSize }) => {
+  const palettes = {
+    amber: { bg: "linear-gradient(135deg,#C8761E,#A85F12)", fg: "#F6F1E7" },
+    teal:  { bg: "linear-gradient(135deg,#3C7A82,#2C5C62)", fg: "#F6F1E7" },
+    ink:   { bg: "linear-gradient(135deg,#1C1812,#0E0C09)", fg: "#F6F1E7" },
+    paper: { bg: "linear-gradient(135deg,#EFE8D8,#D4C7A8)", fg: "#1C1812" },
+  };
+  const p = palettes[palette] || palettes.amber;
+  return (
+    <div style={{
+      width: size, height: size * 4/3, borderRadius: radius,
+      background: p.bg, color: p.fg,
+      display: "flex", alignItems: "flex-end", padding: size * 0.18,
+      fontFamily: "'Source Serif 4', 'Noto Serif SC', serif",
+      fontWeight: 600, fontSize: fontSize || size * 0.28, lineHeight: 1.1,
+      letterSpacing: "-0.01em", flex: "none", boxSizing: "border-box",
+      overflow: "hidden",
+    }}>
+      {title}
+    </div>
+  );
+};
+
+// ---------- Waveform (animates when playing) ----------
+const Waveform = ({ playing, color = "#C8761E", size = 18, bars = 7 }) => (
+  <div style={{ display: "flex", alignItems: "center", gap: 2, height: size }}>
+    {Array.from({ length: bars }).map((_, i) => (
+      <div key={i} style={{
+        width: 2, background: color, borderRadius: 1,
+        height: `${30 + ((i * 37) % 70)}%`,
+        animation: playing ? `hpmWave ${600 + i * 70}ms ease-in-out ${i * 50}ms infinite alternate` : "none",
+        transformOrigin: "center",
+      }} />
+    ))}
+    <style>{`
+      @keyframes hpmWave {
+        from { transform: scaleY(.4); }
+        to   { transform: scaleY(1.1); }
+      }
+    `}</style>
+  </div>
+);
+
+// ---------- Top app bar ----------
+const AppBar = ({ title, left, right, subtitle, titleStyle }) => (
+  <div style={{
+    display: "flex", alignItems: "center", gap: 12,
+    padding: "14px 16px 10px",
+    background: "var(--bg)",
+  }}>
+    <div style={{ width: 40, display: "flex", justifyContent: "flex-start" }}>{left}</div>
+    <div style={{ flex: 1, textAlign: "center", minWidth: 0 }}>
+      <div style={{
+        fontFamily: "var(--font-serif)", fontSize: 17, fontWeight: 700,
+        color: "var(--fg)", lineHeight: 1.1,
+        whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+        ...(titleStyle || {}),
+      }}>{title}</div>
+      {subtitle && (
+        <div style={{
+          fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-muted)",
+          marginTop: 2,
+          whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+        }}>{subtitle}</div>
+      )}
+    </div>
+    <div style={{ width: 40, display: "flex", justifyContent: "flex-end" }}>{right}</div>
+  </div>
+);
+
+// ---------- Round icon button (header) ----------
+const IconButton = ({ icon, onClick, active, size = 40 }) => (
+  <button onClick={onClick} style={{
+    width: size, height: size, borderRadius: 999,
+    border: 0, background: active ? "var(--accent-soft)" : "transparent",
+    color: active ? "var(--accent-strong)" : "var(--fg)",
+    display: "flex", alignItems: "center", justifyContent: "center",
+    cursor: "pointer", transition: "background 120ms",
+  }}>
+    <Icon name={icon} size={20} />
+  </button>
+);
+
+// ---------- Floating playback bar (over content) ----------
+const PlaybackBar = ({ playing, book, onToggle, onOpen }) => {
+  if (!book) return null;
+  return (
+    <div onClick={onOpen} style={{
+      position: "absolute", left: 12, right: 12, bottom: 18,
+      height: 64, borderRadius: 999, padding: "0 8px 0 8px",
+      display: "flex", alignItems: "center", gap: 10,
+      background: "color-mix(in oklab, var(--bg-elev) 92%, transparent)",
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      boxShadow: "0 4px 16px rgba(28,24,18,.10), 0 12px 32px rgba(28,24,18,.12)",
+      cursor: "pointer",
+      zIndex: 5,
+    }}>
+      <BookCover title={book.title[0]} palette={book.palette} size={48} radius={10} fontSize={18} />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{
+          fontFamily: "var(--font-serif)", fontSize: 14, fontWeight: 600, color: "var(--fg)",
+          whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+        }}>{book.title}</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Waveform playing={playing} size={14} bars={5} />
+          <span style={{
+            fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-muted)",
+          }}>{book.chapter}</span>
+        </div>
+      </div>
+      <button onClick={(e) => { e.stopPropagation(); onToggle(); }} style={{
+        width: 44, height: 44, borderRadius: 999, border: 0,
+        background: "var(--accent)", color: "#F6F1E7",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        cursor: "pointer",
+      }}>
+        <Icon name={playing ? "pause" : "play"} size={20} color="#F6F1E7" />
+      </button>
+    </div>
+  );
+};
+
+Object.assign(window, { Icon, BookCover, Waveform, AppBar, IconButton, PlaybackBar });
+</script>
+<script type="text/babel">/* Minimal phone shell — paper background, hairline border, status bar
+   that matches the HPM brand. Replaces the Material-3 starter frame. */
+
+const HpmStatusBar = ({ time = "21:36", battery = 64 }) => (
+  <div style={{
+    height: 36, padding: "0 22px",
+    display: "flex", alignItems: "center", justifyContent: "space-between",
+    background: "var(--bg)", color: "var(--fg)",
+    fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 500,
+    flex: "none",
+  }}>
+    <span>{time}</span>
+    <div style={{
+      position: "absolute", left: "50%", top: 10, transform: "translateX(-50%)",
+      width: 18, height: 18, borderRadius: 99, background: "#1C1812",
+    }} />
+    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      {/* signal */}
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M1 11h2v2H1zM5 8h2v5H5zM9 5h2v8H9z"/></svg>
+      {/* wifi */}
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><path d="M1 5c2-1.5 4-2.5 6-2.5S11 3.5 13 5"/><path d="M3 7c1.3-1 2.5-1.5 4-1.5s2.7.5 4 1.5"/><circle cx="7" cy="10" r="0.8" fill="currentColor"/></svg>
+      {/* battery */}
+      <div style={{
+        width: 22, height: 10, border: "1px solid var(--fg)", borderRadius: 2,
+        position: "relative", display: "flex", alignItems: "center", padding: 1,
+      }}>
+        <div style={{ width: `${(battery/100) * 16}px`, height: "100%", background: "var(--fg)", borderRadius: 1 }} />
+        <div style={{ position: "absolute", right: -3, top: 2, width: 2, height: 6, background: "var(--fg)", borderRadius: 1 }} />
+      </div>
+    </div>
+  </div>
+);
+
+const HpmNavBar = () => (
+  <div style={{
+    height: 24, background: "var(--bg)", display: "flex",
+    alignItems: "center", justifyContent: "center", flex: "none",
+  }}>
+    <div style={{ width: 134, height: 4, borderRadius: 99, background: "var(--fg)", opacity: .85 }} />
+  </div>
+);
+
+const PhoneShell = ({ children, width = 380, height = 800 }) => (
+  <div style={{
+    width, height, borderRadius: 44, padding: 8,
+    background: "linear-gradient(160deg,#2A241C 0%,#0E0C09 100%)",
+    boxShadow: "0 1px 1px rgba(255,255,255,.06) inset, 0 24px 56px rgba(28,24,18,.30), 0 4px 12px rgba(28,24,18,.20)",
+  }}>
+    <div style={{
+      width: "100%", height: "100%", borderRadius: 36, overflow: "hidden",
+      background: "var(--bg)", position: "relative",
+      display: "flex", flexDirection: "column",
+    }}>
+      <HpmStatusBar />
+      <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>{children}</div>
+      <HpmNavBar />
+    </div>
+  </div>
+);
+
+Object.assign(window, { PhoneShell, HpmStatusBar, HpmNavBar });
+</script>
+<script type="text/babel">/* HPM screens — chapter-paginated reader for huge files, virtualized TOC,
+   edit + export, free-scroll with snap-back, luxe gold styling. */
+
+// ============================================================================
+// LibraryScreen
+// ============================================================================
+const LibraryScreen = ({ books, currentId, onPick, onAdd, onOpenVoices, onOpenSettings }) => (
+  <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "var(--bg)" }}>
+    <AppBar
+      title="HPM"
+      subtitle={`${books.length} 本 · 听书`}
+      titleStyle={{
+        fontFamily: "var(--font-serif)", fontSize: 26, fontWeight: 800,
+        letterSpacing: ".18em", lineHeight: 1,
+        background: "var(--gold-grad)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent",
+      }}
+      left={<IconButton icon="search" />}
+      right={<IconButton icon="settings" onClick={onOpenSettings} />}
+    />
+    <div style={{ flex: 1, overflowY: "auto", padding: "8px 16px 120px", display: "flex", flexDirection: "column", gap: 12 }}>
+      {books.find(b => b.id === currentId) && (
+        <div style={{
+          padding: 14, borderRadius: 18,
+          background: "linear-gradient(135deg, var(--bg-elev) 0%, var(--accent-soft) 120%)",
+          display: "flex", alignItems: "center", gap: 14,
+          boxShadow: "0 1px 2px rgba(28,24,18,.06), 0 8px 24px rgba(28,24,18,.08)",
+          border: "1px solid var(--gold)",
+        }}>
+          <BookCover {...books.find(b => b.id === currentId)} size={64} radius={12} fontSize={16} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="gold-text" style={{
+              fontFamily: "var(--font-sans)", fontSize: 10, letterSpacing: ".22em",
+              textTransform: "uppercase", fontWeight: 700,
+            }}>继续收听</div>
+            <div style={{
+              fontFamily: "var(--font-serif)", fontSize: 18, fontWeight: 700, color: "var(--fg)",
+              marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+            }}>{books.find(b => b.id === currentId).title}</div>
+            <div style={{ marginTop: 8, height: 3, background: "rgba(28,24,18,.1)", borderRadius: 99, overflow: "hidden" }}>
+              <div style={{
+                height: "100%", width: `${books.find(b => b.id === currentId).progress * 100}%`,
+                background: "var(--gold-grad)",
+              }} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div style={{
+        display: "flex", alignItems: "baseline", justifyContent: "space-between",
+        marginTop: 8, padding: "0 2px",
+      }}>
+        <h3 style={{
+          fontFamily: "var(--font-serif)", fontSize: 18, fontWeight: 700,
+          color: "var(--fg)", margin: 0, letterSpacing: ".02em",
+        }}>书架</h3>
+        <span className="t-ui-sm">最近</span>
+      </div>
+
+      {books.map(b => (
+        <button key={b.id} onClick={() => onPick(b.id)} style={{
+          display: "flex", alignItems: "center", gap: 14, padding: "10px 8px",
+          background: "transparent", border: 0, cursor: "pointer",
+          borderRadius: 14, textAlign: "left",
+        }}>
+          <BookCover {...b} size={56} radius={10} fontSize={14} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{
+              fontFamily: "var(--font-serif)", fontSize: 16, fontWeight: 600, color: "var(--fg)",
+              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+            }}>{b.title}</div>
+            <div style={{
+              fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-muted)",
+              marginTop: 4, display: "flex", alignItems: "center", gap: 6,
+            }}>
+              {b.author} · {Math.round(b.progress * 100)}% · {b.size}
+              {b.charset && (
+                <span style={{
+                  padding: "1px 6px", borderRadius: 4,
+                  background: "var(--gold-soft)", color: "var(--gold-strong)",
+                  fontSize: 10, letterSpacing: ".04em", fontWeight: 600,
+                }}>{b.charset}</span>
+              )}
+            </div>
+          </div>
+          <Icon name="chevron" color="var(--fg-faint)" size={18} />
+        </button>
+      ))}
+
+      <button onClick={onOpenVoices} style={{
+        marginTop: 12, padding: 14, borderRadius: 14,
+        background: "var(--bg-elev)", border: "1px solid var(--rule)",
+        display: "flex", alignItems: "center", gap: 12, cursor: "pointer", textAlign: "left",
+      }}>
+        <div style={{
+          width: 40, height: 40, borderRadius: 10,
+          background: "var(--gold-soft)", color: "var(--gold-strong)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}>
+          <Icon name="voice" size={20} />
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 600, color: "var(--fg)" }}>音色 · 5 种少女音</div>
+          <div className="t-ui-sm">甜美 · 元气 · 清冷 · 温柔 · 御姐</div>
+        </div>
+        <Icon name="chevron" color="var(--fg-faint)" size={18} />
+      </button>
+    </div>
+
+    <button onClick={onAdd} style={{
+      position: "absolute", right: 18, bottom: 100,
+      width: 56, height: 56, borderRadius: 999, border: 0,
+      background: "var(--fg)", color: "var(--bg)",
+      boxShadow: "0 4px 16px rgba(28,24,18,.20), 0 12px 32px rgba(28,24,18,.20)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      cursor: "pointer", zIndex: 4,
+    }}>
+      <Icon name="plus" size={22} color="var(--bg)" />
+    </button>
+  </div>
+);
+
+// ============================================================================
+// NowPlayingScreen — chapter-paginated, free-scroll + auto-follow, edit + export
+// ============================================================================
+const NowPlayingScreen = ({
+  book, textLoading, playing, paused, onToggle, onSeek, onBack, onOpenVoices, onSave, onExport,
+  speedNum, setSpeedNum, charIndex, ttsUnsupported,
+  chapters, currentChapterIdx, currentChapter, onJumpChapter,
+  voiceLabel, onOpenToc, parsingChapters,
+}) => {
+  const text = book.text || "";
+  const hasText = text.length > 0;
+  const totalLen = text.length;
+
+  // Pagination: viewIdx = the chapter the user is currently READING (may differ
+  // from currentChapterIdx, the chapter being SPOKEN). When the user opens TOC
+  // or jumps, we set viewIdx; otherwise viewIdx follows playback.
+  const [viewIdx, setViewIdx] = React.useState(currentChapterIdx);
+  const [followPlayback, setFollowPlayback] = React.useState(true);
+  const [editing, setEditing] = React.useState(false);
+  const [draft, setDraft] = React.useState("");
+
+  React.useEffect(() => {
+    if (followPlayback) setViewIdx(currentChapterIdx);
+  }, [currentChapterIdx, followPlayback]);
+
+  // Chapter slice — chunk of the full text the reader actually renders
+  const sliceStart = chapters[viewIdx] ? chapters[viewIdx].charStart : 0;
+  const sliceEnd   = window.HpmChapters
+    ? window.HpmChapters.chapterEnd(chapters, viewIdx, totalLen)
+    : totalLen;
+  const slice = text.slice(sliceStart, sliceEnd);
+
+  // Split slice into paragraphs; each carries its absolute charStart so we can
+  // tap to seek and highlight the active one.
+  const paragraphs = React.useMemo(() => {
+    const out = [];
+    let pos = sliceStart;
+    const lines = slice.split("\n");
+    for (const line of lines) {
+      out.push({ text: line, charStart: pos, charEnd: pos + line.length,
+                 isHeading: window.HpmChapters && window.HpmChapters.isHeading(line) });
+      pos += line.length + 1;
+    }
+    return out;
+  }, [slice, sliceStart]);
+
+  const activeIdx = React.useMemo(() => {
+    if (charIndex < sliceStart || charIndex >= sliceEnd) return -1;
+    let lo = 0, hi = paragraphs.length - 1, ans = 0;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (paragraphs[mid].charStart <= charIndex) { ans = mid; lo = mid + 1; }
+      else hi = mid - 1;
+    }
+    return ans;
+  }, [paragraphs, charIndex, sliceStart, sliceEnd]);
+
+  // Refs for auto-scroll behavior
+  const scrollRef = React.useRef(null);
+  const activeRef = React.useRef(null);
+  const lastUserScrollAt = React.useRef(0);
+  const [showFollowFab, setShowFollowFab] = React.useState(false);
+
+  // Auto-scroll only when followPlayback is true AND the user hasn't scrolled
+  // recently. Otherwise show the "回到朗读位置" FAB.
+  React.useEffect(() => {
+    if (!followPlayback) return;
+    if (!activeRef.current || !scrollRef.current) return;
+    if (Date.now() - lastUserScrollAt.current < 2200) return;   // user just scrolled
+    const c = scrollRef.current, el = activeRef.current;
+    const elTop = el.offsetTop;
+    c.scrollTo({ top: Math.max(0, elTop - c.clientHeight * 0.35), behavior: "smooth" });
+  }, [activeIdx, followPlayback, paragraphs.length]);
+
+  // Watch user scroll → toggle follow + FAB
+  const onScroll = () => {
+    lastUserScrollAt.current = Date.now();
+    if (followPlayback && activeRef.current && scrollRef.current) {
+      // If active line is far off-screen, stop following.
+      const c = scrollRef.current, el = activeRef.current;
+      const r = el.getBoundingClientRect();
+      const cr = c.getBoundingClientRect();
+      if (r.bottom < cr.top - 40 || r.top > cr.bottom + 40) {
+        setFollowPlayback(false);
+        setShowFollowFab(true);
+      }
+    } else if (!followPlayback) {
+      setShowFollowFab(true);
+    }
+  };
+
+  const returnToPlaying = () => {
+    setViewIdx(currentChapterIdx);
+    setFollowPlayback(true);
+    setShowFollowFab(false);
+    requestAnimationFrame(() => {
+      if (activeRef.current && scrollRef.current) {
+        const c = scrollRef.current, el = activeRef.current;
+        c.scrollTo({ top: Math.max(0, el.offsetTop - c.clientHeight * 0.35), behavior: "smooth" });
+      }
+    });
+  };
+
+  const goPrevChapter = () => {
+    if (viewIdx <= 0) return;
+    setFollowPlayback(false); setShowFollowFab(true);
+    setViewIdx(viewIdx - 1);
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  };
+  const goNextChapter = () => {
+    if (viewIdx >= chapters.length - 1) return;
+    setFollowPlayback(false); setShowFollowFab(true);
+    setViewIdx(viewIdx + 1);
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  };
+
+  const startEdit = () => { setDraft(text); setEditing(true); };
+  const cancelEdit = () => setEditing(false);
+  const saveEdit = () => { onSave(draft); setEditing(false); };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "var(--bg)" }}>
+      <AppBar
+        title={book.title}
+        subtitle={editing ? "编辑中" : (currentChapter ? currentChapter.title : (book.chapter || "—"))}
+        titleStyle={{ fontWeight: 700, color: "var(--fg)" }}
+        left={<IconButton icon="back" onClick={editing ? cancelEdit : onBack} />}
+        right={
+          editing
+            ? (
+              <div style={{ display: "flex", gap: 4 }}>
+                <button onClick={saveEdit} style={{
+                  height: 32, padding: "0 12px", borderRadius: 999, border: 0,
+                  background: "var(--gold-grad)", color: "#14110D",
+                  fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 700,
+                  cursor: "pointer",
+                }}>保存</button>
+              </div>
+            )
+            : (
+              <button onClick={onOpenToc} style={{
+                width: 40, height: 40, borderRadius: 999, border: 0, background: "transparent",
+                color: "var(--fg)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <Icon name="menu" size={20} />
+              </button>
+            )
+        }
+      />
+
+      {/* Chapter navigation strip */}
+      {!editing && chapters.length > 1 && (
+        <div style={{
+          padding: "6px 18px 4px", display: "flex", alignItems: "center", gap: 10,
+          flex: "none",
+        }}>
+          <button onClick={goPrevChapter} disabled={viewIdx <= 0} style={{
+            width: 28, height: 28, borderRadius: 999, border: 0,
+            background: "var(--bg-elev)", color: "var(--fg)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            opacity: viewIdx <= 0 ? .35 : 1, cursor: viewIdx <= 0 ? "default" : "pointer",
+          }}><Icon name="chevron" size={14} color="var(--fg)" /></button>
+          <button onClick={onOpenToc} style={{
+            flex: 1, height: 28, padding: "0 12px", borderRadius: 999, border: "1px solid var(--rule)",
+            background: "var(--bg-elev)", color: "var(--fg)",
+            fontFamily: "var(--font-serif)", fontSize: 12, fontWeight: 600,
+            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+            whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+            minWidth: 0,
+          }}>
+            <Icon name="menu" size={12} color="var(--gold-strong)" />
+            <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {chapters[viewIdx] ? chapters[viewIdx].title : "目录"}
+            </span>
+            <span style={{ color: "var(--fg-faint)", fontFamily: "var(--font-mono)", fontSize: 10 }}>
+              {viewIdx + 1}/{chapters.length}
+            </span>
+          </button>
+          <button onClick={goNextChapter} disabled={viewIdx >= chapters.length - 1} style={{
+            width: 28, height: 28, borderRadius: 999, border: 0,
+            background: "var(--bg-elev)", color: "var(--fg)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            transform: "rotate(180deg)",
+            opacity: viewIdx >= chapters.length - 1 ? .35 : 1,
+            cursor: viewIdx >= chapters.length - 1 ? "default" : "pointer",
+          }}><Icon name="chevron" size={14} color="var(--fg)" /></button>
+        </div>
+      )}
+
+      {/* Reader · scrollable */}
+      {!editing && (
+        <div ref={scrollRef} onScroll={onScroll} style={{
+          flex: 1, overflowY: "auto", padding: "6px 22px 12px",
+          WebkitOverflowScrolling: "touch", position: "relative",
+        }}>
+          {textLoading && (
+            <div className="t-ui-sm" style={{ textAlign: "center", padding: 14, fontStyle: "italic" }}>
+              加载书籍中…
+            </div>
+          )}
+          {!textLoading && parsingChapters && chapters.length === 0 && (
+            <div className="t-ui-sm" style={{ textAlign: "center", padding: 14, fontStyle: "italic" }}>
+              正在解析章节…
+            </div>
+          )}
+          {!textLoading && !hasText && (
+            <div style={{ textAlign: "center", color: "var(--fg-faint)", fontStyle: "italic", paddingTop: 80, fontFamily: "var(--font-serif)" }}>
+              (本书无文本 · 请从 + 重新上传 TXT)
+            </div>
+          )}
+          <ParagraphList
+            paragraphs={paragraphs}
+            activeIdx={activeIdx}
+            activeRef={activeRef}
+            onSeek={onSeek}
+          />
+          <div style={{ height: 60 }} />
+        </div>
+      )}
+
+      {/* Edit mode */}
+      {editing && (
+        <div style={{ flex: 1, padding: "8px 18px 12px", display: "flex", flexDirection: "column" }}>
+          <div className="t-ui-sm" style={{ marginBottom: 6 }}>修改后点右上「保存」生效。仅修改本地副本，原文件不变。</div>
+          <textarea
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            style={{
+              flex: 1, width: "100%", padding: 14, borderRadius: 12,
+              background: "var(--bg-elev)", border: "1px solid var(--rule)",
+              color: "var(--fg)", fontFamily: "var(--font-serif)", fontSize: 15, lineHeight: 1.7,
+              resize: "none", outline: "none",
+            }}
+          />
+        </div>
+      )}
+
+      {/* Return-to-playing FAB */}
+      {!editing && showFollowFab && hasText && (
+        <button onClick={returnToPlaying} style={{
+          position: "absolute", left: "50%", bottom: 116, transform: "translateX(-50%)",
+          height: 36, padding: "0 16px", borderRadius: 999, border: 0,
+          background: "var(--gold-grad)", color: "#14110D",
+          fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 700,
+          boxShadow: "0 8px 24px rgba(157,122,42,.35)", cursor: "pointer",
+          display: "flex", alignItems: "center", gap: 6, zIndex: 6,
+        }}>
+          <Icon name="waveSm" size={14} color="#14110D" />
+          回到朗读位置
+        </button>
+      )}
+
+      {ttsUnsupported && (
+        <div style={{
+          margin: "0 22px 6px", padding: "8px 12px", borderRadius: 10,
+          background: "var(--danger-soft)", color: "var(--danger)",
+          fontSize: 12, fontWeight: 500, textAlign: "center",
+        }}>当前浏览器不支持语音合成 · 请改用 Chrome / Edge / Safari</div>
+      )}
+
+      {/* Bottom dock */}
+      <div style={{
+        padding: "10px 16px 12px",
+        background: "var(--bg)",
+        borderTop: "1px solid var(--rule)",
+        display: "flex", flexDirection: "column", gap: 8,
+        flex: "none",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--fg-muted)", minWidth: 36, textAlign: "right" }}>
+            {hasText ? `${Math.round((charIndex / Math.max(1, totalLen)) * 100)}%` : "—"}
+          </span>
+          <div style={{ flex: 1, height: 3, background: "var(--bg-sunken)", borderRadius: 99, overflow: "hidden" }}>
+            <div style={{
+              height: "100%",
+              width: hasText ? `${(charIndex / Math.max(1, totalLen)) * 100}%` : "0%",
+              background: "var(--gold-grad)",
+              transition: "width 200ms linear",
+            }} />
+          </div>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--fg-muted)", minWidth: 64, textAlign: "right" }}>
+            {hasText ? `${charIndex.toLocaleString()}/${totalLen.toLocaleString()}` : "—"}
+          </span>
+        </div>
+
+        {/* Speed slider · 0.5×–3.0× in 0.1 steps */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 2px" }}>
+          <span className="t-ui-sm" style={{ fontFamily: "var(--font-mono)", minWidth: 30, color: "var(--fg-muted)" }}>速度</span>
+          <button onClick={() => setSpeedNum(Math.max(0.5, (speedNum || 1) - 0.1))} style={miniBtn}>−</button>
+          <input type="range" min="0.5" max="3.0" step="0.1"
+            value={speedNum} onChange={(e) => setSpeedNum(parseFloat(e.target.value))}
+            style={{
+              flex: 1, accentColor: "var(--gold)",
+              height: 4,
+            }} />
+          <button onClick={() => setSpeedNum(Math.min(3.0, (speedNum || 1) + 0.1))} style={miniBtn}>+</button>
+          <span style={{
+            fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 700,
+            color: "var(--gold-strong)", minWidth: 38, textAlign: "right",
+          }}>{(speedNum || 1).toFixed(1)}×</span>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+
+          {/* Edit / Export menu */}
+          {!editing ? (
+            <button onClick={startEdit} title="编辑文本" style={iconChipStyle}>
+              <Icon name="edit" size={14} />
+            </button>
+          ) : null}
+          <button onClick={() => onExport(book)} title="导出 TXT" style={iconChipStyle}>
+            <Icon name="download" size={14} />
+          </button>
+
+          {/* Transport */}
+          <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}>
+            <button onClick={() => onSeek(Math.max(0, charIndex - 300))} style={transportBtnStyle}>
+              <Icon name="prev" size={20} />
+            </button>
+            <button onClick={onToggle} disabled={ttsUnsupported || !hasText} style={{
+              ...playBtnStyle,
+              cursor: (ttsUnsupported || !hasText) ? "not-allowed" : "pointer",
+              opacity: (ttsUnsupported || !hasText) ? 0.4 : 1,
+            }}>
+              <Icon name={playing ? "pause" : "play"} size={22} color="#14110D" />
+            </button>
+            <button onClick={() => onSeek(Math.min(totalLen, charIndex + 300))} style={transportBtnStyle}>
+              <Icon name="next" size={20} />
+            </button>
+          </div>
+
+          {/* Voice */}
+          <button onClick={onOpenVoices} style={{
+            height: 32, padding: "0 10px", borderRadius: 999, border: "1px solid var(--gold)",
+            background: "var(--gold-soft)", color: "var(--gold-strong)",
+            fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 700,
+            display: "flex", alignItems: "center", gap: 6, cursor: "pointer",
+            maxWidth: 96,
+          }}>
+            <Icon name="voice" size={12} color="var(--gold-strong)" />
+            <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{voiceLabel || "音色"}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const miniBtn = {
+  width: 28, height: 28, borderRadius: 999, border: "1px solid var(--rule)",
+  background: "var(--bg-elev)", color: "var(--fg)",
+  fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 700,
+  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+  flex: "none", padding: 0, lineHeight: 1,
+};
+
+// Virtualized paragraph list — renders only what's visible (huge chapters OK)
+const ParagraphList = ({ paragraphs, activeIdx, activeRef, onSeek }) => {
+  // Estimate average paragraph height; tune empirically.
+  const ROW_EST = 56;
+  const [winTop, setWinTop] = React.useState(0);
+  const [winH, setWinH] = React.useState(800);
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    const el = ref.current && ref.current.parentElement;
+    if (!el) return;
+    const update = () => {
+      setWinTop(el.scrollTop);
+      setWinH(el.clientHeight);
+    };
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    return () => el.removeEventListener("scroll", update);
+  }, [paragraphs.length]);
+
+  // If list is small, render all (cheaper than virtualization overhead)
+  if (paragraphs.length <= 200) {
+    return (
+      <div ref={ref}>
+        {paragraphs.map((p, i) => (
+          <Paragraph key={i} p={p} active={i === activeIdx}
+                     activeRef={i === activeIdx ? activeRef : null}
+                     onSeek={onSeek} />
+        ))}
+      </div>
+    );
+  }
+
+  // Virtualization: estimated positions; the active row gets a hard ref
+  const buffer = 8;
+  const startIdx = Math.max(0, Math.floor(winTop / ROW_EST) - buffer);
+  const endIdx   = Math.min(paragraphs.length, Math.ceil((winTop + winH) / ROW_EST) + buffer);
+  const totalH = paragraphs.length * ROW_EST;
+
+  return (
+    <div ref={ref} style={{ position: "relative", height: totalH }}>
+      {paragraphs.slice(startIdx, endIdx).map((p, j) => {
+        const i = startIdx + j;
+        return (
+          <div key={i} style={{
+            position: "absolute", left: 0, right: 0,
+            top: i * ROW_EST, minHeight: ROW_EST,
+          }}>
+            <Paragraph p={p} active={i === activeIdx}
+                       activeRef={i === activeIdx ? activeRef : null}
+                       onSeek={onSeek} />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const Paragraph = ({ p, active, activeRef, onSeek }) => {
+  const heading = p.isHeading;
+  return (
+    <div
+      ref={activeRef || null}
+      onClick={() => onSeek(p.charStart)}
+      style={{
+        margin: heading ? "18px -8px 12px" : "0 -8px 10px",
+        padding: active ? "6px 10px" : "0 10px",
+        borderRadius: active ? 8 : 0,
+        background: active ? "var(--accent-soft)" : "transparent",
+        fontFamily: "var(--font-serif)",
+        fontSize: heading ? 18 : 16,
+        fontWeight: heading ? 700 : 400,
+        lineHeight: 1.85,
+        color: heading
+          ? "var(--gold-strong)"
+          : (active ? "var(--accent-strong)" : "var(--fg)"),
+        cursor: "pointer",
+        transition: "background 180ms ease, color 180ms ease",
+        textAlign: heading ? "center" : "left",
+        letterSpacing: heading ? ".06em" : 0,
+        whiteSpace: "pre-wrap", wordBreak: "break-word",
+      }}
+    >{p.text || "\u00A0"}</div>
+  );
+};
+
+const iconChipStyle = {
+  height: 32, width: 32, borderRadius: 999, border: "1px solid var(--rule)",
+  background: "var(--bg-elev)", color: "var(--fg)",
+  display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+  flex: "none",
+};
+const transportBtnStyle = {
+  width: 38, height: 38, borderRadius: 999, border: 0, background: "transparent",
+  color: "var(--fg)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+};
+const playBtnStyle = {
+  width: 52, height: 52, borderRadius: 999, border: 0,
+  background: "var(--gold-grad)", color: "#14110D",
+  display: "flex", alignItems: "center", justifyContent: "center",
+  boxShadow: "0 6px 18px rgba(157,122,42,.40)",
+};
+
+const SPEEDS = window.SPEEDS || { "0.75×": 0.75, "1.0×": 1.0, "1.25×": 1.25, "1.5×": 1.5, "2.0×": 2.0, "2.5×": 2.5, "3.0×": 3.0 };
+
+// ============================================================================
+// VoicesScreen — original spec: 已安装 + 可下载 groups + featured 甜美少女
+// ============================================================================
+const VoicesScreen = ({ voices, currentVoice, onPick, onBack, onDownload }) => {
+  const installed   = voices.filter(v => v.installed);
+  const downloadable = voices.filter(v => !v.installed);
+  const featured = voices.find(v => v.id === "sweetgirl") || voices[0];
+
+  const preview = (v) => {
+    if (!window.HpmTts || window.HpmTts.unsupported) return;
+    const samples = {
+      "zh-CN": "你好呀，我是这本书的朗读者，今晚由我陪你听到结束。",
+      "en-US": "Hello, this is your narrator. Tonight I'll read until the end.",
+      "ja-JP": "こんばんは。今夜はわたしが最後まで読みあげます。",
+    };
+    window.HpmTts.speak(samples[v.lang] || samples["zh-CN"], {
+      lang: v.lang, gender: v.gender, pitch: v.pitch,
+      rate: v.rateMul || 1.0, voiceHints: v.voiceHints,
+    });
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "var(--bg)" }}>
+      <AppBar
+        title="音色"
+        subtitle={`${installed.length} 已安装 · ${downloadable.filter(v => !v.downloading).length} 可下载`}
+        left={<IconButton icon="back" onClick={onBack} />}
+        right={<div style={{ width: 40 }} />}
+      />
+      <div style={{ flex: 1, overflowY: "auto", padding: "12px 16px 120px", display: "flex", flexDirection: "column", gap: 14 }}>
+
+        {/* Featured · 甜美少女 */}
+        {featured && featured.installed && (
+          <div style={{
+            padding: 18, borderRadius: 22,
+            background: "linear-gradient(140deg, var(--gold-soft) 0%, var(--bg-elev) 100%)",
+            boxShadow: "0 4px 16px rgba(201,162,78,.18)",
+            border: "1px solid var(--gold)",
+            position: "relative", overflow: "hidden",
+          }}>
+            <div className="gold-text" style={{
+              position: "absolute", top: 12, right: 14,
+              fontFamily: "var(--font-sans)", fontSize: 10, fontWeight: 700,
+              letterSpacing: ".22em", textTransform: "uppercase",
+            }}>推荐</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div style={{
+                width: 56, height: 56, borderRadius: 18,
+                background: "var(--gold-grad)", color: "#14110D",
+                fontFamily: "var(--font-serif)", fontSize: 26, fontWeight: 800,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: "0 6px 16px rgba(157,122,42,.30)",
+              }}>{featured.glyph}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div className="gold-bold" style={{ fontSize: 22, letterSpacing: ".01em" }}>{featured.name}</div>
+                <div className="t-ui-sm" style={{ marginTop: 2 }}>{featured.desc}</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
+              <button onClick={() => preview(featured)} style={{
+                flex: 1, height: 38, borderRadius: 999,
+                border: "1px solid var(--gold-strong)",
+                background: "transparent", color: "var(--gold-strong)",
+                fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 700,
+                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              }}>
+                <Icon name="play" size={14} color="var(--gold-strong)" />
+                试听
+              </button>
+              <button onClick={() => onPick(featured.id)} style={{
+                flex: 1, height: 38, borderRadius: 999,
+                border: 0, background: "var(--gold-grad)", color: "#14110D",
+                fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 700,
+                cursor: "pointer",
+              }}>{currentVoice === featured.id ? "使用中" : "使用此音色"}</button>
+            </div>
+          </div>
+        )}
+
+        {/* Installed group */}
+        <div style={{
+          fontFamily: "var(--font-sans)", fontSize: 11, color: "var(--gold-strong)",
+          textTransform: "uppercase", letterSpacing: ".22em", fontWeight: 700,
+          padding: "4px 2px",
+        }}>已安装</div>
+        <div style={{
+          background: "var(--bg-elev)", borderRadius: 14, overflow: "hidden",
+          border: "1px solid var(--rule)",
+        }}>
+          {installed.map((v, i) => {
+            const active = currentVoice === v.id;
+            return (
+              <button key={v.id} onClick={() => onPick(v.id)} style={{
+                width: "100%", display: "flex", alignItems: "center", gap: 12,
+                padding: "12px 14px", border: 0, cursor: "pointer", textAlign: "left",
+                background: active ? "var(--gold-soft)" : "transparent",
+                borderBottom: i < installed.length - 1 ? "1px solid var(--rule)" : 0,
+              }}>
+                <div style={{
+                  width: 40, height: 40, borderRadius: 12,
+                  background: active ? "var(--gold-grad)" : "var(--bg-sunken)",
+                  color: active ? "#14110D" : "var(--fg)",
+                  fontFamily: "var(--font-serif)", fontSize: 18, fontWeight: 800,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>{v.glyph}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{
+                    fontFamily: "var(--font-serif)", fontSize: 15, fontWeight: 700,
+                    color: active ? "var(--gold-strong)" : "var(--fg)",
+                  }}>{v.name}</div>
+                  <div className="t-ui-sm" style={{ marginTop: 2 }}>{v.lang} · {v.size || "已安装"}</div>
+                </div>
+                <button onClick={(e) => { e.stopPropagation(); preview(v); }} style={{
+                  height: 30, width: 30, borderRadius: 999, border: "1px solid var(--rule)",
+                  background: "var(--bg)", color: "var(--fg)", cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", flex: "none",
+                }}><Icon name="play" size={12} /></button>
+                {active ? (
+                  <span style={{
+                    display: "inline-flex", alignItems: "center", gap: 6,
+                    padding: "4px 10px", borderRadius: 999,
+                    background: "var(--gold-grad)", color: "#14110D",
+                    fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 700,
+                  }}><span style={{ width: 6, height: 6, borderRadius: 99, background: "#14110D" }} />使用中</span>
+                ) : (
+                  <span className="t-ui-sm" style={{ fontWeight: 600 }}>切换</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Downloadable group */}
+        {downloadable.length > 0 && (
+          <React.Fragment>
+            <div style={{
+              fontFamily: "var(--font-sans)", fontSize: 11, color: "var(--gold-strong)",
+              textTransform: "uppercase", letterSpacing: ".22em", fontWeight: 700,
+              padding: "12px 2px 0",
+            }}>可下载 · 免费</div>
+            <div style={{
+              background: "var(--bg-elev)", borderRadius: 14, overflow: "hidden",
+              border: "1px solid var(--rule)",
+            }}>
+              {downloadable.map((v, i) => (
+                <div key={v.id} style={{
+                  display: "flex", alignItems: "center", gap: 12,
+                  padding: "12px 14px",
+                  borderBottom: i < downloadable.length - 1 ? "1px solid var(--rule)" : 0,
+                }}>
+                  <div style={{
+                    width: 40, height: 40, borderRadius: 12,
+                    background: "var(--bg-sunken)", color: "var(--fg-muted)",
+                    fontFamily: "var(--font-serif)", fontSize: 18, fontWeight: 700,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>{v.glyph}</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{
+                      fontFamily: "var(--font-serif)", fontSize: 15, fontWeight: 600, color: "var(--fg)",
+                    }}>{v.name}</div>
+                    <div className="t-ui-sm" style={{ marginTop: 2 }}>
+                      {v.lang} · {v.size || "—"}{v.downloading != null ? ` · ${Math.round(v.downloading * 100)}%` : ""}
+                    </div>
+                    {v.downloading != null && (
+                      <div style={{
+                        marginTop: 6, height: 3, background: "var(--bg-sunken)", borderRadius: 99,
+                        overflow: "hidden", maxWidth: 220,
+                      }}>
+                        <div style={{ height: "100%", width: `${v.downloading * 100}%`, background: "var(--gold-grad)" }} />
+                      </div>
+                    )}
+                  </div>
+                  {v.downloading != null ? (
+                    <span style={{
+                      fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--gold-strong)", fontWeight: 700,
+                    }}>下载中</span>
+                  ) : (
+                    <button onClick={() => onDownload(v.id)} style={{
+                      display: "inline-flex", alignItems: "center", gap: 6,
+                      padding: "6px 12px", borderRadius: 999, border: 0,
+                      background: "var(--gold-grad)", color: "#14110D",
+                      fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 700,
+                      cursor: "pointer",
+                    }}><Icon name="download" size={12} color="#14110D" />下载</button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </React.Fragment>
+        )}
+
+        <div className="t-ui-sm" style={{ textAlign: "center", marginTop: 4, padding: "0 24px", lineHeight: 1.5 }}>
+          音色由系统语音引擎提供 · 实际效果取决于设备已装的语音数据
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================================
+// AddFileSheet — drag-or-tap to upload, multi-encoding decode
+// ============================================================================
+const AddFileSheet = ({ onClose, onAdd }) => {
+  const inputRef = React.useRef(null);
+  const [tab, setTab] = React.useState("local");
+  const [reading, setReading] = React.useState(false);
+  const [error,   setError]   = React.useState(null);
+  const [progress, setProgress] = React.useState(null);
+  const [dragOver, setDragOver] = React.useState(false);
+  const [urlInput, setUrlInput] = React.useState("");
+  const [urlHistory, setUrlHistory] = React.useState(() =>
+    (window.HpmStore && window.HpmStore.get("urlHistory", [])) || []);
+
+  const formatSize = (n) =>
+    (window.HpmReadTextFile && window.HpmReadTextFile.formatSize)
+      ? window.HpmReadTextFile.formatSize(n)
+      : ((n / 1024 / 1024).toFixed(1) + " MB");
+
+  const handleFiles = async (fileList) => {
+    if (!fileList || !fileList.length) return;
+    setReading(true); setError(null); setProgress(null);
+    try {
+      for (const file of Array.from(fileList)) {
+        if (!/\.txt$/i.test(file.name) && file.type && !file.type.startsWith("text/")) {
+          setError(`仅支持 TXT · ${file.name}`); continue;
+        }
+        if (!window.HpmReadTextFile) { setError("读取器未初始化"); continue; }
+        setProgress({ name: file.name, stage: "读取中" });
+        const r = await window.HpmReadTextFile(file);
+        if (r && r.ok) {
+          setProgress({ name: file.name, stage: "添加中" });
+          try {
+            await Promise.resolve(onAdd({
+              name: file.name,
+              size: formatSize(r.byteCount),
+              text: r.text,
+              charset: r.charset,
+            }));
+          } catch (e) { setError("加入书架失败 · " + (e && e.message || e)); }
+        } else if (r && r.reason === "too-large") {
+          setError(`文件过大 · ${formatSize(r.byteCount || 0)} · 上限 64 MB`);
+        } else if (r && r.reason === "empty") setError("文件为空");
+        else setError("无法读取文件 · " + ((r && r.error) || "未知错误"));
+      }
+    } catch (e) {
+      setError("读取失败 · " + (e && e.message || e));
+    } finally {
+      setReading(false); setProgress(null);
+    }
+  };
+
+  const handleUrl = async (rawUrl) => {
+    const url = (rawUrl || urlInput || "").trim();
+    if (!url) { setError("请输入网址"); return; }
+    if (!window.HpmFetchUrl) { setError("URL 加载器未初始化"); return; }
+    setReading(true); setError(null);
+    setProgress({ name: url.length > 50 ? url.slice(0, 50) + "…" : url, stage: "下载中" });
+    const r = await window.HpmFetchUrl(url);
+    setReading(false); setProgress(null);
+    if (r && r.ok) {
+      try {
+        await Promise.resolve(onAdd({ name: r.name || "remote.txt",
+                size: formatSize(r.byteCount),
+                text: r.text, charset: r.charset }));
+      } catch (e) { setError("加入书架失败 · " + (e && e.message || e)); return; }
+      const next = [url, ...urlHistory.filter(u => u !== url)].slice(0, 8);
+      setUrlHistory(next);
+      if (window.HpmStore) window.HpmStore.set("urlHistory", next);
+    } else if (r && r.reason === "too-large") {
+      setError(`文件过大 · ${formatSize(r.byteCount || 0)} · 上限 64 MB`);
+    } else if (r && r.reason === "cors") {
+      setError("无法访问该网址 · 跨域被拦截或网址不公开");
+    } else {
+      setError("加载失败 · " + (r.error || r.reason));
+    }
+  };
+
+  const Tab = ({ id, label }) => (
+    <button onClick={() => { setTab(id); setError(null); }} style={{
+      flex: 1, height: 36, borderRadius: 8, border: 0,
+      background: tab === id ? "var(--gold-grad)" : "transparent",
+      color: tab === id ? "#14110D" : "var(--fg-muted)",
+      fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 700,
+      cursor: "pointer",
+    }}>{label}</button>
+  );
+
+  return (
+    <div style={{
+      position: "absolute", inset: 0, zIndex: 10,
+      background: "var(--scrim)",
+      display: "flex", alignItems: "flex-end",
+    }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: "100%", background: "var(--bg-elev)",
+        borderTopLeftRadius: 28, borderTopRightRadius: 28,
+        padding: "12px 18px 24px",
+        boxShadow: "0 -12px 32px rgba(28,24,18,.20)",
+        maxHeight: "85%", overflowY: "auto",
+      }}>
+        <div style={{ width: 36, height: 4, borderRadius: 99, background: "var(--rule-strong)", margin: "0 auto 14px" }} />
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+          <div className="gold-bold" style={{ fontSize: 22 }}>添加 TXT</div>
+          <IconButton icon="close" onClick={onClose} />
+        </div>
+
+        {/* Tabs */}
+        <div style={{
+          display: "flex", padding: 3, marginBottom: 12,
+          background: "var(--bg-sunken)", borderRadius: 10,
+        }}>
+          <Tab id="local" label="本地文件" />
+          <Tab id="url"   label="从网址加载" />
+        </div>
+
+        {tab === "local" && (
+          <React.Fragment>
+            <div className="t-ui-sm" style={{ marginBottom: 12 }}>
+              自动识别编码 · UTF-8 / GBK / GB18030 / BIG5 / UTF-16。上限 64 MB。
+            </div>
+            <input ref={inputRef} type="file" accept=".txt,text/plain" multiple
+              style={{ display: "none" }}
+              onChange={(e) => handleFiles(e.target.files)} />
+            <div
+              onClick={() => inputRef.current && inputRef.current.click()}
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={(e) => { e.preventDefault(); setDragOver(false); handleFiles(e.dataTransfer.files); }}
+              style={{
+                border: `1.5px dashed ${dragOver ? "var(--gold)" : "var(--rule-strong)"}`,
+                background: dragOver ? "var(--gold-soft)" : "var(--bg)",
+                borderRadius: 16, padding: "22px 16px", textAlign: "center",
+                cursor: "pointer", transition: "all 120ms ease",
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 10,
+              }}>
+              <div style={{
+                width: 44, height: 44, borderRadius: 12,
+                background: "var(--gold-grad)", color: "#14110D",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <Icon name="txt" size={22} color="#14110D" />
+              </div>
+              <div style={{ fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 700, color: "var(--fg)" }}>
+                {reading ? (progress ? `${progress.stage} · ${progress.name}` : "读取中…") : "选择本地 TXT 文件"}
+              </div>
+              <div className="t-ui-sm" style={{ fontFamily: "var(--font-mono)" }}>点按选择 · 或拖拽到此</div>
+            </div>
+          </React.Fragment>
+        )}
+
+        {tab === "url" && (
+          <React.Fragment>
+            <div className="t-ui-sm" style={{ marginBottom: 10 }}>
+              支持：GitHub Raw · GitHub Gist · jsDelivr · Dropbox 公开链接 · 任何允许跨域的直链 TXT 网址。
+              <br/>不支持：百度网盘、微信文件助手（这些平台禁止外链）。
+            </div>
+            <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+              <input
+                type="url" inputMode="url" placeholder="https://..."
+                value={urlInput}
+                onChange={(e) => setUrlInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleUrl(); }}
+                style={{
+                  flex: 1, height: 44, padding: "0 14px", borderRadius: 10,
+                  border: "1px solid var(--rule)", background: "var(--bg)",
+                  color: "var(--fg)", fontFamily: "var(--font-mono)", fontSize: 13,
+                  outline: "none",
+                }} />
+              <button onClick={() => handleUrl()} disabled={reading} style={{
+                height: 44, padding: "0 18px", borderRadius: 10, border: 0,
+                background: "var(--gold-grad)", color: "#14110D",
+                fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 700,
+                cursor: reading ? "wait" : "pointer", opacity: reading ? .5 : 1,
+              }}>{reading ? "加载中…" : "加载"}</button>
+            </div>
+
+            {progress && (
+              <div className="t-ui-sm" style={{ marginBottom: 10, fontFamily: "var(--font-mono)" }}>
+                {progress.stage} · {progress.name}
+              </div>
+            )}
+
+            {urlHistory.length > 0 && (
+              <div style={{ marginTop: 8 }}>
+                <div style={{
+                  fontFamily: "var(--font-sans)", fontSize: 10, color: "var(--gold-strong)",
+                  textTransform: "uppercase", letterSpacing: ".22em", fontWeight: 700,
+                  padding: "4px 2px 6px",
+                }}>最近访问</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  {urlHistory.map((u, i) => (
+                    <button key={i} onClick={() => { setUrlInput(u); handleUrl(u); }} style={{
+                      display: "flex", alignItems: "center", gap: 10,
+                      padding: "10px 12px", border: "1px solid var(--rule)",
+                      borderRadius: 10, background: "var(--bg)", cursor: "pointer",
+                      textAlign: "left",
+                    }}>
+                      <Icon name="download" size={14} color="var(--gold-strong)" />
+                      <span style={{
+                        flex: 1, minWidth: 0,
+                        fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg)",
+                        overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                      }}>{u}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </React.Fragment>
+        )}
+
+        {error && (
+          <div style={{
+            marginTop: 10, padding: "10px 12px", borderRadius: 10,
+            background: "var(--danger-soft)", color: "var(--danger)",
+            fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500,
+          }}>{error}</div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ============================================================================
+// SettingsScreen
+// ============================================================================
+const SettingsScreen = ({ onBack, theme, setTheme, voiceLabel, onClearAll }) => {
+  const Row = ({ label, value, right, onClick }) => (
+    <button onClick={onClick} disabled={!onClick} style={{
+      width: "100%", display: "flex", alignItems: "center", padding: "14px 16px",
+      borderBottom: "1px solid var(--rule)", border: 0, background: "transparent",
+      cursor: onClick ? "pointer" : "default", textAlign: "left",
+    }}>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--fg)" }}>{label}</div>
+        {value && <div className="t-ui-sm" style={{ marginTop: 2 }}>{value}</div>}
+      </div>
+      {right}
+    </button>
+  );
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "var(--bg)" }}>
+      <AppBar title="设置" left={<IconButton icon="back" onClick={onBack} />} right={<div />} />
+      <div style={{ padding: "8px 16px 24px", overflowY: "auto", flex: 1 }}>
+        <div style={{
+          padding: 16, borderRadius: 18,
+          background: "linear-gradient(135deg, var(--bg-elev) 0%, var(--gold-soft) 130%)",
+          border: "1px solid var(--gold)",
+          display: "flex", alignItems: "center", gap: 14, marginBottom: 16,
+        }}>
+          <img src="../../assets/hpm-mark.svg" width="48" height="48" alt="HPM" />
+          <div>
+            <div className="gold-bold" style={{ fontSize: 22 }}>HPM 听书</div>
+            <div className="t-ui-sm" style={{ fontFamily: "var(--font-mono)" }}>v0.6.0 · 自用版本</div>
+          </div>
+        </div>
+
+        <div style={{
+          fontFamily: "var(--font-sans)", fontSize: 11, color: "var(--gold-strong)",
+          textTransform: "uppercase", letterSpacing: ".22em", fontWeight: 700,
+          padding: "4px 2px 8px",
+        }}>朗读</div>
+        <div style={{ background: "var(--bg-elev)", borderRadius: 14, overflow: "hidden", marginBottom: 16, border: "1px solid var(--rule)" }}>
+          <Row label="当前音色" value={voiceLabel} right={<Icon name="chevron" color="var(--fg-faint)" size={18} />} />
+          <Row label="睡眠定时" value="关闭" right={<Icon name="chevron" color="var(--fg-faint)" size={18} />} />
+        </div>
+
+        <div style={{
+          fontFamily: "var(--font-sans)", fontSize: 11, color: "var(--gold-strong)",
+          textTransform: "uppercase", letterSpacing: ".22em", fontWeight: 700,
+          padding: "4px 2px 8px",
+        }}>外观</div>
+        <div style={{ background: "var(--bg-elev)", borderRadius: 14, overflow: "hidden", marginBottom: 16, border: "1px solid var(--rule)" }}>
+          <div style={{ padding: "12px 14px" }}>
+            <div style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--fg)", marginBottom: 10 }}>主题</div>
+            <div style={{
+              display: "inline-flex", padding: 4, borderRadius: 10,
+              background: "var(--bg-sunken)",
+            }}>
+              {["light","dark","auto"].map(m => (
+                <button key={m} onClick={() => setTheme(m)} style={{
+                  height: 30, padding: "0 16px", borderRadius: 7, border: 0,
+                  background: theme === m ? "var(--gold-grad)" : "transparent",
+                  color: theme === m ? "#14110D" : "var(--fg-muted)",
+                  fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 700,
+                  cursor: "pointer",
+                }}>{m === "light" ? "日间" : m === "dark" ? "夜间" : "跟随系统"}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div style={{
+          fontFamily: "var(--font-sans)", fontSize: 11, color: "var(--gold-strong)",
+          textTransform: "uppercase", letterSpacing: ".22em", fontWeight: 700,
+          padding: "4px 2px 8px",
+        }}>数据</div>
+        <div style={{ background: "var(--bg-elev)", borderRadius: 14, overflow: "hidden", border: "1px solid var(--rule)" }}>
+          <Row label="清空全部数据" value="书架 · 进度 · 设置" onClick={onClearAll}
+               right={<Icon name="chevron" color="var(--fg-faint)" size={18} />} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================================
+// TocSheet — virtualized list, handles 10k+ chapters
+// ============================================================================
+const ROW_H = 44;
+const TocSheet = ({ chapters, currentIdx, onPick, onClose }) => {
+  const scrollRef = React.useRef(null);
+  const [scrollTop, setScrollTop] = React.useState(0);
+  const [containerH, setContainerH] = React.useState(480);
+
+  React.useEffect(() => {
+    if (!scrollRef.current) return;
+    setContainerH(scrollRef.current.clientHeight);
+    // Auto-center current chapter
+    const target = Math.max(0, currentIdx * ROW_H - scrollRef.current.clientHeight / 2);
+    scrollRef.current.scrollTop = target;
+    setScrollTop(target);
+  }, []);
+
+  const totalH = chapters.length * ROW_H;
+  const buffer = 6;
+  const startIdx = Math.max(0, Math.floor(scrollTop / ROW_H) - buffer);
+  const endIdx   = Math.min(chapters.length, Math.ceil((scrollTop + containerH) / ROW_H) + buffer);
+  const visible = chapters.slice(startIdx, endIdx);
+
+  return (
+    <div onClick={onClose} style={{
+      position: "absolute", inset: 0, zIndex: 12,
+      background: "var(--scrim)",
+      display: "flex", alignItems: "flex-end",
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: "100%", maxHeight: "85%",
+        background: "var(--bg-elev)",
+        borderTopLeftRadius: 28, borderTopRightRadius: 28,
+        padding: "12px 0 16px",
+        boxShadow: "0 -12px 32px rgba(28,24,18,.20)",
+        display: "flex", flexDirection: "column",
+        borderTop: "1px solid var(--gold)",
+      }}>
+        <div style={{
+          width: 36, height: 4, borderRadius: 99,
+          background: "var(--gold-grad)", margin: "0 auto 12px",
+        }} />
+        <div style={{
+          padding: "0 22px 12px",
+          display: "flex", alignItems: "baseline", justifyContent: "space-between",
+        }}>
+          <div className="gold-bold" style={{ fontSize: 22 }}>目录</div>
+          <span className="t-ui-sm">{chapters.length.toLocaleString()} 章</span>
+        </div>
+        <div ref={scrollRef} onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)} style={{
+          flex: 1, overflowY: "auto", padding: "0 12px",
+          WebkitOverflowScrolling: "touch",
+        }}>
+          {chapters.length === 0 ? (
+            <div style={{ textAlign: "center", color: "var(--fg-faint)", padding: 40, fontStyle: "italic" }}>
+              这本书没有可识别的章节
+            </div>
+          ) : (
+            <div style={{ height: totalH, position: "relative" }}>
+              {visible.map((c, j) => {
+                const i = startIdx + j;
+                const active = i === currentIdx;
+                return (
+                  <button
+                    key={i}
+                    onClick={() => { onPick(c, i); }}
+                    style={{
+                      position: "absolute", left: 0, right: 0, top: i * ROW_H, height: ROW_H,
+                      display: "flex", alignItems: "center", gap: 12,
+                      padding: "0 12px", border: 0, cursor: "pointer", textAlign: "left",
+                      borderRadius: 10,
+                      background: active ? "var(--gold-soft)" : "transparent",
+                      borderLeft: `3px solid ${active ? "var(--gold)" : "transparent"}`,
+                    }}
+                  >
+                    <span style={{
+                      fontFamily: "var(--font-mono)", fontSize: 11,
+                      color: active ? "var(--gold-strong)" : "var(--fg-faint)",
+                      minWidth: 38, textAlign: "right",
+                    }}>{i + 1}</span>
+                    <span style={{
+                      flex: 1, minWidth: 0,
+                      fontFamily: "var(--font-serif)", fontSize: 14,
+                      color: active ? "var(--gold-strong)" : "var(--fg)",
+                      fontWeight: active ? 700 : 400,
+                      whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                    }}>{c.title}</span>
+                    {active && <Icon name="waveSm" size={14} color="var(--gold)" />}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Patch AppBar to accept titleStyle (small helper override)
+// We rely on the existing components.jsx AppBar; just re-expose a richer one here.
+
+Object.assign(window, { LibraryScreen, NowPlayingScreen, VoicesScreen, AddFileSheet, SettingsScreen, TocSheet });
+</script>
+<script type="text/babel">/* HPM app · v0.7
+   - Book TEXT stored in IndexedDB (large files no longer freeze localStorage)
+   - Speed slider 0.5×→3.0× in 0.1 steps
+   - Voice profiles try harder to map onto distinct system voiceURIs
+   - Boundary fallback: when onboundary doesn't fire (Chinese TTS on Chrome),
+     advance charIndex on a time-based estimator instead.
+*/
+
+const { useState, useEffect, useMemo, useRef } = React;
+
+// ─── Sample books (seed only — full text kept in IndexedDB) ────────────────
+const SAMPLE_SANTI = `第一章 · 科学边界
+
+夜色渐深，他合上书页，窗外的城市灯火依旧明亮。
+机器仍在朗读，声音温和地穿过房间，像是一段不被打扰的独白。
+
+第二章 · 三体问题
+
+三体问题，是天体力学中的经典难题：当三个天体在彼此引力的作用下运动时，它们的轨迹会变得极不规则——一种数学上的混沌。
+任何一次细微的偏差，都会被无限放大，让长期预测变得几乎不可能。
+
+第三章 · 日全食
+
+他想起多年前在山顶看到的那次日全食。月亮缓缓覆盖太阳，光线一点点退去，世界陷入一种短暂的、近乎神圣的寂静。`;
+
+const SAMPLE_HUOZHE = `第一章
+
+我比现在年轻十岁的时候，获得了一个游手好闲的职业。
+
+第二章
+
+我喜欢喝农民那种带着苦味的茶水。`;
+
+const SAMPLE_OLDMAN = `Chapter 1
+
+He was an old man who fished alone in a skiff in the Gulf Stream.
+
+Chapter 2
+
+In the first forty days a boy had been with him.`;
+
+const SAMPLE_NOTE = `灯下读书的人，并不孤独。
+
+把一本书读完，就像走完一段陌生的路。`;
+
+const SEED_META = [
+  { id: "santi",  title: "三体",                    author: "刘慈欣",   palette: "amber", progress: 0, size: "1.2 MB", chapter: "—" },
+  { id: "huozhe", title: "活着",                    author: "余华",     palette: "ink",   progress: 0, size: "640 KB", chapter: "—" },
+  { id: "oldman", title: "The Old Man and the Sea", author: "Hemingway",palette: "teal",  progress: 0, size: "240 KB", chapter: "—" },
+  { id: "yedu",   title: "夜读笔记",                author: "本地",     palette: "paper", progress: 0, size: "180 KB", chapter: "—" },
+];
+const SEED_TEXTS = {
+  santi:  SAMPLE_SANTI, huozhe: SAMPLE_HUOZHE, oldman: SAMPLE_OLDMAN, yedu: SAMPLE_NOTE,
+};
+
+// ─── Voice profiles ────────────────────────────────────────────────────────
+// `voiceHints`: substrings to look for in system Voice.name. We try each
+// hint in order; the first match wins. Falls back to gender/pitch shaping
+// when no system voice matches.
+const VOICE_PROFILES = [
+  { id: "sweetgirl", name: "甜美少女", glyph: "甜", lang: "zh-CN", gender: "female",
+    pitch: 1.45, rateMul: 1.05, size: "18.4 MB", installed: true,
+    voiceHints: ["xiaoyi", "xiaomeng", "xiaoshuang", "tingting", "甜", "蜜"],
+    desc: "高音 · 轻快活泼 · 言情 / 校园 / 治愈" },
+  { id: "energetic", name: "元气萝莉", glyph: "元", lang: "zh-CN", gender: "female",
+    pitch: 1.65, rateMul: 1.20, size: "19.6 MB", installed: false,
+    voiceHints: ["xiaorui", "xiaobei", "xiaomeng", "kid", "child"],
+    desc: "更高音 · 节奏快 · 轻小说 / 喜剧 / 日常" },
+  { id: "icegirl",   name: "清冷少女", glyph: "清", lang: "zh-CN", gender: "female",
+    pitch: 1.15, rateMul: 0.90, size: "21.3 MB", installed: false,
+    voiceHints: ["xiaohan", "xiaoqiu", "yaling", "ya-ling", "莹"],
+    desc: "中高音 · 偏冷静 · 悬疑 / 古风 / 玄幻" },
+  { id: "warmsis",   name: "温柔大姐姐", glyph: "柔", lang: "zh-CN", gender: "female",
+    pitch: 1.00, rateMul: 0.85, size: "22.1 MB", installed: true,
+    voiceHints: ["xiaoxiao", "samantha", "siri", "kyoko"],
+    desc: "中音 · 慢而温暖 · 文学 / 散文 / 睡前故事" },
+  { id: "mature",    name: "知性御姐", glyph: "御", lang: "zh-CN", gender: "female",
+    pitch: 0.80, rateMul: 0.95, size: "24.7 MB", installed: false,
+    voiceHints: ["meijia", "mei-jia", "fang", "huihui"],
+    desc: "低音 · 沉稳 · 都市 / 职场 / 商战" },
+  { id: "warmboy",   name: "暖男 · 低音", glyph: "暖", lang: "zh-CN", gender: "male",
+    pitch: 0.85, rateMul: 0.95, size: "23.2 MB", installed: false,
+    voiceHints: ["yunxi", "yunjian", "kangkang", "daniel"],
+    desc: "低音 · 温暖 · 历史 / 武侠 / 悬疑" },
+  { id: "aria",      name: "Aria · English",  glyph: "A", lang: "en-US", gender: "female",
+    pitch: 1.0, rateMul: 1.0, size: "28.0 MB", installed: false, voiceHints: ["aria","jenny","samantha","karen","zira"],
+    desc: "Natural English narrator" },
+  { id: "natsu",     name: "夏 · 日本語",  glyph: "夏", lang: "ja-JP", gender: "female",
+    pitch: 1.05, rateMul: 1.0, size: "21.0 MB", installed: false, voiceHints: ["kyoko","otoya","mizuki"],
+    desc: "明るい · 日本語ナレーター" },
+];
+
+// Snap a stored numeric speed to a clean label
+function speedLabel(x) {
+  const n = Math.round(x * 10) / 10;
+  if (Number.isInteger(n)) return n.toFixed(1) + "×";
+  return n.toFixed(1) + "×";
+}
+window.SPEEDS = { "0.5×": 0.5, "1.0×": 1.0, "1.5×": 1.5, "2.0×": 2.0, "2.5×": 2.5, "3.0×": 3.0 };
+
+// ─── App ───────────────────────────────────────────────────────────────────
+function App() {
+  const [route, setRoute] = useState("library");
+  const [showAdd, setShowAdd] = useState(false);
+  const [showToc, setShowToc] = useState(false);
+  const [meta, setMeta]           = window.HpmStore.useStored("meta",      SEED_META);
+  const [currentId, setCurrentId] = window.HpmStore.useStored("currentId", "santi");
+  const [voiceId, setVoiceId]     = window.HpmStore.useStored("voiceId",   "sweetgirl");
+  const [speedNum, setSpeedNum]   = window.HpmStore.useStored("speedNum",  1.0);
+  const [theme, setTheme]         = window.HpmStore.useStored("theme",     "light");
+  const [positions, setPositions] = window.HpmStore.useStored("positions", {});
+  const [voices, setVoices]       = window.HpmStore.useStored("voices",    VOICE_PROFILES);
+
+  const [bookText, setBookText] = useState("");
+  const [textLoading, setTextLoading] = useState(false);
+  const [seekBase, setSeekBase] = useState(0);
+  const [ttsState, setTtsState] = useState({ ready: false, playing: false, paused: false, charIndex: 0 });
+  const [chapters, setChapters] = useState([]);
+  const [parsingChapters, setParsingChapters] = useState(false);
+
+  const playing = ttsState.playing && !ttsState.paused;
+  const tts = window.HpmTts;
+  const ttsUnsupported = !tts || tts.unsupported;
+  const voice = voices.find(v => v.id === voiceId && v.installed) || voices.find(v => v.installed) || voices[0];
+
+  const bookMeta = meta.find(b => b.id === currentId) || meta[0];
+  const book = bookMeta ? { ...bookMeta, text: bookText } : null;
+
+  // Seed IndexedDB on first run
+  useEffect(() => {
+    (async () => {
+      if (!window.HpmDB) return;
+      const ids = await window.HpmDB.allIds();
+      const have = new Set(ids);
+      for (const [id, text] of Object.entries(SEED_TEXTS)) {
+        if (!have.has(id)) await window.HpmDB.setText(id, text);
+      }
+    })();
+  }, []);
+
+  // Theme
+  useEffect(() => {
+    const html = document.documentElement;
+    if (theme === "auto") html.removeAttribute("data-theme");
+    else html.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  // Load current book's text from IndexedDB whenever currentId changes
+  useEffect(() => {
+    let cancelled = false;
+    setBookText(""); setChapters([]); setParsingChapters(true);
+    setTextLoading(true);
+    (async () => {
+      const t = window.HpmDB ? await window.HpmDB.getText(currentId) : SEED_TEXTS[currentId];
+      if (cancelled) return;
+      const text = t || SEED_TEXTS[currentId] || "";
+      setBookText(text);
+      setTextLoading(false);
+      // Async chapter parse
+      if (window.HpmChapters) {
+        window.HpmChapters.parseAsync(text).then(cs => {
+          if (cancelled) return;
+          setChapters(cs);
+          setParsingChapters(false);
+        });
+      } else { setParsingChapters(false); }
+    })();
+    return () => { cancelled = true; };
+  }, [currentId]);
+
+  // Absolute char position (real if engine reports boundaries; estimated otherwise)
+  const realCharIndex = seekBase + (ttsState.charIndex || 0);
+
+  // ─── Time-based fallback for audio/text sync ──────────────────────────
+  // Some Chinese TTS engines (Chromium on Android, Edge zh-CN) don't fire
+  // 'onboundary' events. In that case ttsState.charIndex stays stuck. We
+  // estimate position from elapsed wall time × characters-per-second.
+  const startedAtRef = useRef(0);
+  const baseAtStartRef = useRef(0);
+  const [estimatedIdx, setEstimatedIdx] = useState(0);
+
+  // Reset estimator anchors when playback starts or seekBase changes.
+  useEffect(() => {
+    if (ttsState.playing && !ttsState.paused) {
+      startedAtRef.current = performance.now();
+      baseAtStartRef.current = seekBase;
+      setEstimatedIdx(seekBase);
+    }
+  }, [ttsState.playing, ttsState.paused, seekBase]);
+
+  // Tick the estimator while playing
+  useEffect(() => {
+    if (!playing) return;
+    const t = setInterval(() => {
+      const elapsedSec = (performance.now() - startedAtRef.current) / 1000;
+      // ~5 chars/sec at 1.0× for Chinese, ~12 for English. Use a single
+      // ballpark — the highlight is approximate either way.
+      const charsPerSec = 5.0 * (speedNum || 1) * (voice.rateMul || 1);
+      const est = baseAtStartRef.current + Math.round(elapsedSec * charsPerSec);
+      setEstimatedIdx(est);
+    }, 150);
+    return () => clearInterval(t);
+  }, [playing, speedNum, voice.rateMul]);
+
+  // Use whichever is further along: the real boundary or our estimator.
+  // The boundary jumps fire at chunk starts in Chinese — by trusting the
+  // max we keep the highlight moving smoothly between events.
+  const charIndex = Math.max(realCharIndex, playing ? estimatedIdx : realCharIndex);
+  const totalLen  = bookText.length;
+  const boundedCharIndex = Math.max(0, Math.min(charIndex, totalLen));
+
+  // Persist reading position per book
+  useEffect(() => {
+    if (!bookMeta || !bookText || boundedCharIndex <= 0) return;
+    setPositions(prev => ({ ...prev, [bookMeta.id]: boundedCharIndex }));
+  }, [boundedCharIndex, bookMeta && bookMeta.id]);
+
+  const currentChapterIdx = useMemo(() => {
+    if (!window.HpmChapters || !chapters.length) return 0;
+    return window.HpmChapters.currentChapter(chapters, boundedCharIndex);
+  }, [chapters, boundedCharIndex]);
+  const currentChapter = chapters[currentChapterIdx];
+
+  // Subscribe to TTS state
+  useEffect(() => {
+    if (ttsUnsupported) return;
+    return tts.onState(s => setTtsState(s));
+  }, []);
+
+  // Voice / speed change → restart from current position if currently playing
+  useEffect(() => {
+    if (ttsUnsupported || !playing) return;
+    speakFrom(boundedCharIndex);
+    // eslint-disable-next-line
+  }, [voiceId, speedNum]);
+
+  const speakFrom = (absIdx) => {
+    if (ttsUnsupported || !bookText) return;
+    const start = Math.max(0, Math.min(absIdx, bookText.length));
+    setSeekBase(start);
+    tts.speak(bookText.slice(start), {
+      lang: voice.lang, gender: voice.gender, pitch: voice.pitch,
+      rate: (Number(speedNum) || 1.0) * (voice.rateMul || 1.0),
+      voiceHints: voice.voiceHints,
+    });
+  };
+
+  const onSeek = (absIdx) => speakFrom(absIdx);
+  const onToggle = () => {
+    if (ttsUnsupported || !bookText) return;
+    if (playing) tts.pause();
+    else if (ttsState.paused) tts.resume();
+    else speakFrom(boundedCharIndex);
+  };
+
+  const pickBook = (id) => {
+    if (id !== currentId) {
+      if (!ttsUnsupported) tts.stop();
+      setCurrentId(id);
+      const saved = positions[id] || 0;
+      setSeekBase(saved);
+    }
+    setRoute("playing");
+  };
+
+  const handleAdd = async (file) => {
+    setShowAdd(false);
+    const safeName = (file.name || "untitled").replace(/[\\/:*?"<>|]/g, "_");
+    const id = safeName.replace(/\.txt$/i, "") || "book-" + Date.now();
+    const text = file.text || "";
+
+    try {
+      // 1) Save text to IndexedDB FIRST (independently of React state)
+      if (window.HpmDB) {
+        await window.HpmDB.setText(id, text);
+      }
+    } catch (e) {
+      console.error("save to IndexedDB failed", e);
+      alert("保存到本地失败 · " + (e && e.message ? e.message : "未知错误"));
+      return;
+    }
+
+    // 2) Build meta (small, safe for localStorage)
+    const newMeta = {
+      id, title: id.length > 60 ? id.slice(0, 60) + "…" : id,
+      author: "本地", palette: "paper",
+      progress: 0, size: file.size, chapter: "—",
+      charset: file.charset || null,
+    };
+
+    // 3) Update meta list defensively
+    try {
+      const without = (meta || []).filter(b => b.id !== id);
+      setMeta([newMeta, ...without]);
+    } catch (e) {
+      console.error("setMeta failed", e);
+    }
+
+    // 4) Switch to the new book — clear any in-flight TTS first
+    try { if (!ttsUnsupported && tts) tts.stop(); } catch (_) {}
+    setCurrentId(id);
+    setSeekBase(0);
+    setRoute("playing");
+  };
+
+  const onSaveEdit = async (newText) => {
+    if (!bookMeta) return;
+    if (!ttsUnsupported) tts.stop();
+    if (window.HpmDB) await window.HpmDB.setText(bookMeta.id, newText);
+    setBookText(newText);
+    setSeekBase(0);
+    setPositions(prev => ({ ...prev, [bookMeta.id]: 0 }));
+    // Reparse chapters
+    if (window.HpmChapters) {
+      setParsingChapters(true);
+      window.HpmChapters.parseAsync(newText).then(cs => {
+        setChapters(cs); setParsingChapters(false);
+      });
+    }
+  };
+
+  const onExport = (b) => {
+    if (!b || !bookText) return;
+    try {
+      const blob = new Blob([bookText], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = (b.title || "未命名") + ".txt";
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 300);
+    } catch (e) { console.error("export failed", e); }
+  };
+
+  const onClearAll = async () => {
+    if (!confirm("确定清空全部数据？")) return;
+    try {
+      Object.keys(localStorage).forEach(k => { if (k.startsWith("hpm:")) localStorage.removeItem(k); });
+      if (window.HpmDB) {
+        const ids = await window.HpmDB.allIds();
+        for (const id of ids) await window.HpmDB.deleteText(id);
+      }
+    } catch (_) {}
+    location.reload();
+  };
+
+  return (
+    <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", background: "var(--bg)" }}>
+      {route === "library" && (
+        <LibraryScreen
+          books={meta}
+          currentId={currentId}
+          onPick={pickBook}
+          onAdd={() => setShowAdd(true)}
+          onOpenVoices={() => setRoute("voices")}
+          onOpenSettings={() => setRoute("settings")}
+        />
+      )}
+      {route === "playing" && book && (
+        <NowPlayingScreen
+          book={book}
+          textLoading={textLoading}
+          playing={playing}
+          paused={ttsState.paused}
+          onToggle={onToggle}
+          onSeek={onSeek}
+          onBack={() => setRoute("library")}
+          onOpenVoices={() => setRoute("voices")}
+          onOpenToc={() => setShowToc(true)}
+          onSave={onSaveEdit}
+          onExport={onExport}
+          speedNum={Number(speedNum) || 1.0}
+          setSpeedNum={(n) => setSpeedNum(Math.round(n * 10) / 10)}
+          charIndex={boundedCharIndex}
+          ttsUnsupported={ttsUnsupported}
+          chapters={chapters}
+          currentChapterIdx={currentChapterIdx}
+          currentChapter={currentChapter}
+          onJumpChapter={(c) => speakFrom(c.charStart)}
+          voiceLabel={voice.name.split(" · ")[0]}
+          parsingChapters={parsingChapters}
+        />
+      )}
+      {route === "voices" && (
+        <VoicesScreen
+          voices={voices}
+          currentVoice={voiceId}
+          onPick={(id) => {
+            const v = voices.find(x => x.id === id);
+            if (!v || !v.installed) return;
+            setVoiceId(id);
+            setRoute(currentId ? "playing" : "library");
+          }}
+          onBack={() => setRoute(currentId ? "playing" : "library")}
+          onDownload={(id) => {
+            setVoices(vs => vs.map(v => v.id === id ? { ...v, downloading: 0.05 } : v));
+            let p = 0.05;
+            const t = setInterval(() => {
+              p += 0.12;
+              setVoices(vs => vs.map(v => v.id === id
+                ? (p >= 1 ? { ...v, downloading: undefined, installed: true } : { ...v, downloading: p })
+                : v));
+              if (p >= 1) clearInterval(t);
+            }, 350);
+          }}
+        />
+      )}
+      {route === "settings" && (
+        <SettingsScreen
+          onBack={() => setRoute("library")}
+          theme={theme}
+          setTheme={setTheme}
+          voiceLabel={voice.name}
+          onClearAll={onClearAll}
+        />
+      )}
+
+      {route !== "playing" && bookMeta && (
+        <PlaybackBar
+          book={bookMeta}
+          playing={playing}
+          onToggle={onToggle}
+          onOpen={() => setRoute("playing")}
+        />
+      )}
+
+      {showAdd && <AddFileSheet onClose={() => setShowAdd(false)} onAdd={handleAdd} />}
+      {showToc && (
+        <TocSheet
+          chapters={chapters}
+          currentIdx={currentChapterIdx}
+          onPick={(c) => { setShowToc(false); speakFrom(c.charStart); }}
+          onClose={() => setShowToc(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+window.App = App;
+</script>
+<script type="text/babel">ReactDOM.createRoot(document.getElementById("app")).render(<App />);</script>
+<script>if ("serviceWorker" in navigator) { window.addEventListener("load", () => { navigator.serviceWorker.register("./sw.js").catch(() => {}); }); }</script>
+</body>
+</html>
